@@ -1,17 +1,11 @@
 package com.atdxt.Jdbc1;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -26,7 +20,6 @@ public class PersonController {
     }
 
     @GetMapping("/get")
-    @ResponseBody
     public List<Person> getAllPersons() {
         String sql = "SELECT * FROM people";
 
@@ -41,8 +34,18 @@ public class PersonController {
         return persons;
     }
 
+    @PostMapping("/add")
+    public ResponseEntity<String> insertPerson(@RequestBody Person person) {
+        String sql = "INSERT INTO people (People_name, People_city) VALUES (?, ?)";
 
+        int rowsAffected = jdbcTemplate.update(sql, person.getName(), person.getCity());
 
-
+        if (rowsAffected == 1) {
+            return new ResponseEntity<>("Person inserted successfully", HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>("Failed to insert person", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
+
