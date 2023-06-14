@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Jdbc1/Jdbc1.iml" filepath="$PROJECT_DIR$/Jdbc1/Jdbc1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Jdbc_Jpa.iml" filepath="$PROJECT_DIR$/Jdbc_Jpa.iml" />
     </modules>
   </component>
 </project>
