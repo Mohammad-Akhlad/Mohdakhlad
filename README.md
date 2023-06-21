@@ -78,3 +78,7 @@ The logging includes:
 - Custom parameters can be added for additional contextual information.
 - Logging helps track request flow, monitor responses, and analyze project performance.
 
+## EC2 Instance Link
+This application is present in the EC2 instance to access run below link
+
+     http://ec2-65-2-123-108.ap-south-1.compute.amazonaws.com:8080/customers/get
