@@ -82,3 +82,43 @@ The logging includes:
 This application is present in the EC2 instance to access run below link
 
      http://ec2-65-2-123-108.ap-south-1.compute.amazonaws.com:8080/customers/get
+
+# Configuration
+
+
+## Mysql Details
+
+User: Mohdakhlad
+
+Password: "Akhlad@123"
+
+Database Name: jdbc_video
+
+## Application setting about EC2 instances 
+
+EC2 name : AWS-Instances
+
+EC2 address: ec2-3-108-220-14.ap-south-1.compute.amazonaws.com
+
+Public IPV4 address: 3.108.220.14
+
+
+
+
+
+
+
+## Application setting about RDS instances
+
+Instance Identifier: Akhlad-RDS
+
+Username: Akhlad123
+
+Password: Akhlad123
+
+Database Name: Akhlad123
+
+RDS Endpoint : akhlad-rds.cvc0llveztzp.ap-south-1.rds.amazonaws.com
+
+Port No. 3306
+
