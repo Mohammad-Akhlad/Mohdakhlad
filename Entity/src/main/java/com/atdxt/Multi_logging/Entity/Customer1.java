@@ -4,31 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 @Entity
-@Table(name = "customer")
-public class Customer {
+@Table(name = "customer1")
+public class Customer1 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "city")
-    private String city;
-
-/*    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
-    private Customer1 customer1;*/
-
-   /* @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Customer1 customer1;
-*/
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.PERSIST)
-    @JsonIgnoreProperties("customer")
-    private Customer1 customer1;
-
-
+    @Column(name = "age")
+    private int age;
 
     @Column(name = "created_on")
     private LocalDateTime createdOn;
@@ -36,9 +23,14 @@ public class Customer {
     @Column(name = "last_modified")
     private LocalDateTime lastModified;
 
+    @OneToOne
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+
+    private Customer customer;
+
     // Constructors, Getters, and Setters
 
-    public Customer() {
+    public Customer1() {
         // Default constructor
     }
 
@@ -52,28 +44,12 @@ public class Customer {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public int getAge() {
+        return age;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public Customer1 getCustomer1() {
-        return customer1;
-    }
-
-    public void setCustomer1(Customer1 customer1) {
-        this.customer1 = customer1;
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public LocalDateTime getCreatedOn() {
@@ -90,5 +66,13 @@ public class Customer {
 
     public void setLastModified(LocalDateTime lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }
