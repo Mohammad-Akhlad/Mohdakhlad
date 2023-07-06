@@ -13,7 +13,6 @@ import org.springframework.context.annotation.ComponentScan;
 @ComponentScan(basePackages = "com.atdxt.Multi_logging")
 public class Main {
 
-    private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);

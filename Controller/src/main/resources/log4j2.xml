@@ -1,49 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
-    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d %p %C{1.} [%t] %m%n</pattern>
-        </encoder>
-    </appender>
+<Configuration>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%style{%d{ISO8601}}{black} %highlight{%-5level} [%style{%t}{bright,blue}] %style{%C{1.}}{bright,yellow}: %msg%n%throwable" />
+        </Console>
 
-    <appender name="ErrorFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/var/log/Jdbc_log/error.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/var/log/Jdbc_log/error.%d{yyyy-MM}/spring-boot-error-log4j2-%d{dd-MMMM-yyyy}-%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>10MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d %p %C{1.} [%t] %m%n</pattern>
-        </encoder>
-    </appender>
+        <RollingFile name="InfoRollingFile"
+                     fileName="/var/log/Jdbc_log/info1.log"
+                     filePattern="/var/log/Jdbc_log/logs/$${date:yyyy-MM}/info-%d{-dd-MMMM-yyyy}-%i.log">
+            <PatternLayout>
+                <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- Rollover daily -->
+                <TimeBasedTriggeringPolicy interval="1" />
+            </Policies>
+            <Filters>
+                <ThresholdFilter level="info" onMatch="Accept" onMismatch="Deny" />
+            </Filters>
+        </RollingFile>
 
-    <appender name="InfoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/var/log/Jdbc_log/info.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>/var/log/Jdbc_log/info.%d{yyyy-MM}/spring-boot-info-log4j2-%d{dd-MMMM-yyyy}-%i.log</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>10MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d %p %C{1.} [%t] %m%n</pattern>
-        </encoder>
-    </appender>
+        <RollingFile name="ErrorRollingFile"
+                     fileName="/var/log/Jdbc_log/error2.log"
+                     filePattern="/var/log/Jdbc_log/logs/$${date:yyyy-MM}/error-%d{-dd-MMMM-yyyy}-%i.log">
+            <PatternLayout>
+                <Pattern>%d %p %C{1.} [%t] %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <!-- Rollover daily -->
+                <TimeBasedTriggeringPolicy interval="1" />
+            </Policies>
+            <Filters>
+                <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY" />
+            </Filters>
+        </RollingFile>
+    </Appenders>
 
-    <root level="info">
-        <appender-ref ref="Console" />
-        <appender-ref ref="ErrorFile" />
-        <appender-ref ref="InfoFile" />
-    </root>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="InfoRollingFile" />
+            <AppenderRef ref="ErrorRollingFile" />
+        </Root>
 
-    <logger name="com.atdxt.Multi_logging" level="trace">
-        <appender-ref ref="ErrorFile" />
-        <appender-ref ref="InfoFile" />
-    </logger>
-</configuration>
 
+        <Logger name="com.atdxt.Multi_logging" level="info" additivity="false">
+            <AppenderRef ref="InfoRollingFile" />
+        </Logger>
+
+        <!-- Log "com.atdxt.dbconnection" at ERROR level to error.log -->
+        <Logger name="com.atdxt.Multi_logging" level="error" additivity="false">
+            <AppenderRef ref="ErrorRollingFile" />
+        </Logger>
+    </Loggers>
+</Configuration>
 

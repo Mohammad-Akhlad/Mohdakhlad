@@ -6,6 +6,8 @@ import com.atdxt.Multi_logging.Entity.Customer2;
 import com.atdxt.Multi_logging.Repository.Customer2Repository;
 import com.atdxt.Multi_logging.Repository.CustomerRepository;
 import com.atdxt.Multi_logging.Repository.Customer1Repository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/customers")
 public class CustomerController {
+    private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
+
+    static {
+        System.setProperty("log4j2.debug", "true");
+    }
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -34,6 +41,15 @@ public class CustomerController {
 
         return customerRepository.findAll();
     }
+    @GetMapping("/exception")
+    public void createRuntimeException() {
+        try {
+            int result = 10 / 0; // Division by zero to trigger the runtime exception
+        } catch (Exception e) {
+            logger.error("An error occurred: ", e);
+        }
+    }
+
 
     @GetMapping("/get/{id}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {

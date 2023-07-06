@@ -81,7 +81,7 @@ The logging includes:
 ## EC2 Instance Link
 This application is present in the EC2 instance to access run below link
 
-     http://ec2-65-2-123-108.ap-south-1.compute.amazonaws.com:8080/customers/get
+     http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/get
 
 # Configuration
 
@@ -98,9 +98,9 @@ Database Name: jdbc_video
 
 EC2 name : AWS-Instances
 
-EC2 address: ec2-3-108-220-14.ap-south-1.compute.amazonaws.com
+EC2 address: ec2-13-235-81-85.ap-south-1.compute.amazonaws.com
 
-Public IPV4 address: 3.108.220.14
+Public IPV4 address: 13.235.81.85
 
 
 
@@ -121,4 +121,56 @@ Database Name: Akhlad123
 RDS Endpoint : akhlad-rds.cvc0llveztzp.ap-south-1.rds.amazonaws.com
 
 Port No. 3306
+
+
+## Two Entity Tables
+
+curl -X POST -H "Content-Type: application/json" -d '{"name":"Mahim","city":"Allahabad","customer1":{"age":45}}' 
+http://localhost:8080/customers/post
+
+curl -X GET http://localhost:8080/customers/get
+
+curl -X PUT -H "Content-Type: application/json" -d '{"name":"Mahi","city":"Lucknow","customer1":{"age":30}}'
+http://localhost:8080/customers/update/21
+
+curl -X GET http://localhost:8080/customers/get/21
+
+
+
+## Base 64
+
+curl -X POST -H "Content-Type: application/json" -d '{"username":"Amir", "password":"mohd1234"}'
+http://localhost:8080/customers/post2
+
+curl -X GET -H "Content-Type: application/json" http://localhost:8080/customers/get2
+
+curl -X POST -H "Content-Type: application/json" -d '{"username":"Amir", "password":"mohd1234"}'
+http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/post2
+
+curl -X GET http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/get2
+
+curl -X PUT -H "Content-Type: application/json" -d '{"username":"Amir", "password":"mohd1234"}'  
+http://localhost:8080/customers/update/21
+
+
+
+
+## Docker with local host
+
+curl -X POST -H "Content-Type: application/json" -d '{"username":"Amir", "password":"mohd1234"}' 
+http://localhost:8080/customers/post2
+
+curl -X GET -H "Content-Type: application/json" http://localhost:8080/customers/get2
+
+
+
+## Docker with EC2 instance
+
+docker run -p 8080:8080 --name Container2 mohdakhlad/mohd:first
+
+curl -X POST -H "Content-Type: application/json" -d '{"username":"Aero", "password":"mohd1234"}'
+http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/post2
+
+curl -X GET -H "Content-Type: application/json" http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/get2
+
 

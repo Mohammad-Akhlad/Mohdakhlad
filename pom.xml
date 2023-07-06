@@ -9,6 +9,8 @@
         <version>2.6.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
+
     <groupId>com.atdxt</groupId>
     <artifactId>Multi_logging</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -16,17 +18,16 @@
     <name>Multi_logging</name>
     <description>Demo project for Spring Boot</description>
 
+    <properties>
+        <java.version>17</java.version>
+        <maven.plugin.validation>VERBOSE</maven.plugin.validation>
+    </properties>
 
     <modules>
         <module>Controller</module>
         <module>Entity</module>
         <module>Repository</module>
     </modules>
-
-    <properties>
-        <java.version>17</java.version>
-        <maven.plugin.validation>VERBOSE</maven.plugin.validation>
-    </properties>
 
     <dependencies>
         <!-- Add your dependencies here -->
@@ -35,8 +36,8 @@
             <artifactId>spring-boot-starter</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
                 </exclusion>
 
             </exclusions>
@@ -56,27 +57,33 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-logging</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-slf4j-impl</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.14.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.14.1</version>
+        </dependency>
+
 
 
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-log4j2</artifactId>
+            <version>2.6.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-to-slf4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
-            <version>2.17.1</version>
-        </dependency>
+
+
+
 
 
         <dependency>
@@ -84,9 +91,9 @@
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
         <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-jdbc</artifactId>
-    </dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -104,13 +111,11 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>5.6.1.Final</version>
-
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
             <version>2.6.3</version>
-
             <scope>provided</scope>
         </dependency>
 
@@ -121,13 +126,11 @@
             <scope>test</scope>
         </dependency>
 
-
-
-
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-            <version>8.0.33</version>       </dependency>
+            <version>8.0.33</version>
+        </dependency>
 
         <!-- Add the Lombok dependency for annotation support -->
         <dependency>
@@ -135,30 +138,6 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-log4j2</artifactId>
-            <version>2.6.3</version>
-
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-to-slf4j</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <!-- Add Hibernate dependency, this will be used by spring-boot-starter-data-jpa -->
-<!--        <dependency>-->
-<!--            <groupId>org.hibernate</groupId>-->
-<!--            <artifactId>hibernate-core</artifactId>-->
-<!--            &lt;!&ndash; Use the latest version of Hibernate &ndash;&gt;-->
-<!--            <version>5.6.1.Final</version>-->
-<!--        </dependency>-->
     </dependencies>
 
     <distributionManagement>
@@ -168,9 +147,6 @@
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
     </distributionManagement>
-
-
-
 
     <build>
         <plugins>
@@ -187,7 +163,7 @@
                         </exclude>
                     </excludes>
                     <skip>true</skip>
-                    <!-- Specify the correct main class -->
+                    <mainClass>com.atdxt.Multi_logging.controller.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>
