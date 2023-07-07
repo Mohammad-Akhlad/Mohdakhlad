@@ -19,7 +19,7 @@ USE `jdbc_video`;
 --
 
 
-CREATE TABLE `customer` (
+CREATE TABLE IF NOT EXISTS`customer` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `city` varchar(255) DEFAULT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE `customer` (
 -- Table structure for table `people`
 --
 
-CREATE TABLE `people` (
+CREATE TABLE IF NOT EXISTS`people` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `city` varchar(255) DEFAULT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE `people` (
 -- Table structure for table `person`
 --
 
-CREATE TABLE `person` (
+CREATE TABLE IF NOT EXISTS`person` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `age` int DEFAULT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE `person` (
 --
 
 
-CREATE TABLE `your_table_name` (
+CREATE TABLE IF NOT EXISTS`your_table_name` (
   `id` int NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `city` varchar(255) DEFAULT NULL,
@@ -72,8 +72,20 @@ CREATE TABLE `your_table_name` (
 
 
 ALTER TABLE customer
-  ADD COLUMN created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  ADD COLUMN last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+ADD COLUMN created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+
+
+ALTER TABLE customer
+ADD COLUMN last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+
+
+ALTER TABLE customer ADD COLUMN Date_of_Birth DATE;
+
+ALTER TABLE customer ADD COLUMN Phone_no VARCHAR(20);
+
+
+
 
 --
 -- Dumping routines for database 'jdbc_video'

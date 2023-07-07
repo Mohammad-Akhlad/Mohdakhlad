@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
@@ -51,7 +53,7 @@ public class CustomerController {
     }
 
 
-    @GetMapping("/get/{id}")
+    /*@GetMapping("/get/{id}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
         Optional<Customer> optionalCustomer = customerRepository.findById(id);
         if (optionalCustomer.isPresent()) {
@@ -59,10 +61,21 @@ public class CustomerController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }*/
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
+        Optional<Customer> optionalCustomer = customerRepository.findById(id);
+        if (optionalCustomer.isPresent()) {
+            return ResponseEntity.ok(optionalCustomer.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 
-    @PostMapping("/post")
+
+  /*  @PostMapping("/post")
     public Customer saveCustomer(@RequestBody Customer customer) {
         Customer1 customer1 = customer.getCustomer1();
         LocalDateTime currentDateTime = LocalDateTime.now(); // Get the current date and time
@@ -84,6 +97,44 @@ public class CustomerController {
 
         return customer;
     }
+*/
+
+
+    @PostMapping("/post")
+    public Customer saveCustomer(@RequestBody Customer customer) {
+        Customer1 customer1 = customer.getCustomer1();
+        LocalDateTime currentDateTime = LocalDateTime.now(); // Get the current date and time
+
+        // Set createdOn and lastModified for the customer
+        customer.setCreatedOn(currentDateTime);
+        customer.setLastModified(currentDateTime);
+
+        // Set Date_of_Birth and Phone_no if provided
+        if (customer.getDateOfBirth() != null) {
+            customer.setDateOfBirth(customer.getDateOfBirth());
+        }
+        if (customer.getPhoneNumber() != null) {
+            customer.setPhoneNumber(customer.getPhoneNumber());
+        }
+
+        // Set createdOn and lastModified for the customer1 if present
+        if (customer1 != null) {
+            customer1.setCreatedOn(currentDateTime);
+            customer1.setLastModified(currentDateTime);
+            customer1.setCustomer(customer);
+        }
+
+        customerRepository.save(customer); // Save the customer entity
+
+        if (customer1 != null) {
+            customer1Repository.save(customer1); // Save the customer1 entity
+        }
+
+        return customer;
+    }
+
+
+
 
 
     @GetMapping("/get2")
@@ -114,7 +165,7 @@ public class CustomerController {
     }
 
 
-@PutMapping("/update/{id}")
+/*@PutMapping("/update/{id}")
 public Customer updateCustomer(@PathVariable("id") Long id, @RequestBody Customer updatedCustomer) {
     Optional<Customer> existingCustomerOptional = customerRepository.findById(id);
 
@@ -138,6 +189,34 @@ public Customer updateCustomer(@PathVariable("id") Long id, @RequestBody Custome
     } else {
         throw new EntityNotFoundException("Customer not found with ID: " + id);
     }
-}
+}*/
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Customer> updateCustomer(@PathVariable("id") Long id, @RequestBody Customer updatedCustomer) {
+        Optional<Customer> existingCustomerOptional = customerRepository.findById(id);
+
+        if (existingCustomerOptional.isPresent()) {
+            Customer existingCustomer = existingCustomerOptional.get();
+            existingCustomer.setName(updatedCustomer.getName());
+            existingCustomer.setCity(updatedCustomer.getCity());
+
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            existingCustomer.setLastModified(currentDateTime);
+
+            // Update the customer1 if present
+            Customer1 existingCustomer1 = existingCustomer.getCustomer1();
+            Customer1 updatedCustomer1 = updatedCustomer.getCustomer1();
+            if (existingCustomer1 != null && updatedCustomer1 != null) {
+                existingCustomer1.setAge(updatedCustomer1.getAge());
+                existingCustomer1.setLastModified(currentDateTime);
+            }
+
+            customerRepository.save(existingCustomer);
+            return ResponseEntity.ok(existingCustomer);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
 
 }

@@ -1,12 +1,15 @@
 package com.atdxt.Multi_logging.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "customer")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +20,15 @@ public class Customer {
 
     @Column(name = "city")
     private String city;
+
+    @Column(name = "Date_of_Birth")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private LocalDate dateOfBirth;
+
+    @Column(name = "Phone_no")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String phoneNumber;
+
 
 /*    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private Customer1 customer1;*/
@@ -91,4 +103,21 @@ public class Customer {
     public void setLastModified(LocalDateTime lastModified) {
         this.lastModified = lastModified;
     }
+
+    public LocalDate getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
 }

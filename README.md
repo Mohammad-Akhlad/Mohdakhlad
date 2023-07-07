@@ -174,3 +174,57 @@ http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/post2
 curl -X GET -H "Content-Type: application/json" http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/get2
 
 
+## Backward Compatibility with two API  in local and Docker too
+
+curl -X POST -H "Content-Type: application/json" -d '{
+"name": "Maria",
+"city": "Allahabad",
+"dateOfBirth": "1999-03-17",
+"phoneNumber": "1254567890",
+"customer1": {
+"age": 45
+}
+}' http://localhost:8080/customers/post
+
+
+
+
+curl -X POST -H "Content-Type: application/json" -d '{
+"name": "Maria",
+"city": "Allahabad",
+"customer1": {
+"age": 45
+}
+}' http://localhost:8080/customers/post
+
+
+
+
+
+
+## Backward Compatibility with Docker EC2 instance
+
+curl -X POST -H "Content-Type: application/json" -d '{
+"name": "Aishwarya",
+"city": "Allahabad",
+"dateOfBirth": "1998-03-16",
+"phoneNumber": "1254567690",
+"customer1": {
+"age": 15 } }' http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/post
+
+
+
+
+curl -X POST -H "Content-Type: application/json" -d '{
+"name": "Aishwarya",
+"city": "Allahabad",
+"customer1": {
+"age": 15 } }' http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/post
+
+
+curl -X GET http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/get
+
+
+
+
+
