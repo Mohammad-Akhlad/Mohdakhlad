@@ -1,3 +1,4 @@
+
 package com.atdxt.Multi_logging.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -33,13 +34,12 @@ public class Customer {
 /*    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private Customer1 customer1;*/
 
-   /* @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Customer1 customer1;
-*/
+    /* @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+     private Customer1 customer1;
+ */
     @OneToOne(mappedBy = "customer", cascade = CascadeType.PERSIST)
     @JsonIgnoreProperties("customer")
     private Customer1 customer1;
-
 
 
     @Column(name = "created_on")
@@ -119,5 +119,4 @@ public class Customer {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
-
 }

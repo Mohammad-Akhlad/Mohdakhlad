@@ -42,7 +42,7 @@ Key Features
 ## Preconditions
 
 Before getting started with the logging project, ensure that you have the following prerequisites in place:
-- Your multi-module project is set up and functional.
+- Your multimodule project is set up and functional.
 - The necessary logging libraries or frameworks (e.g., log4j, Winston) are installed and configured.
 
 
@@ -226,5 +226,36 @@ curl -X GET http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/custom
 
 
 
+
+## Phone_No validation in local  as well as docker (local host)
+
+
+curl -X POST -H "Content-Type: application/json" -d '{
+"name": "Mina","city": "Mathura","dateOfBirth": "1990-06-10","phoneNumber": "7587955679","customer1": {"age": 56 }
+}'http://localhost:8080/customers/post
+
+
+curl -X PUT -H "Content-Type: application/json" -d '{"name": "Hiraa","city": "Mathura","dateOfBirth": "1990-06-10","phoneNumber": "6569767569","customer1": {"age": 45 }
+}' http://localhost:8080/customers/update/95
+
+curl -X GET 
+http://localhost:8080/customers/get/95
+
+curl -X GET 
+http://localhost:8080/customers/get
+
+
+## Phone_No validation in Docker using EC2 instance
+
+
+curl -X POST -H "Content-Type: application/json" -d '{"name": "Aisha","city": "Allahabad","dateOfBirth": "1998-03-16","phoneNumber": "9254567690","customer1": {"age": 15 }
+}' http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/post
+
+curl -X PUT -H "Content-Type: application/json" -d '{"name": "Hari","city": "Mathura","dateOfBirth": "1990-06-10","phoneNumber": "7669767569","customer1": {"age": 45 }
+}' http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/update/95
+
+curl -X GET http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/get/95
+
+curl -X GET http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/get
 
 

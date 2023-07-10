@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.atdxt</groupId>
+        <artifactId>Multi_logging</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.atdxt1</groupId>
+    <artifactId>Service</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <properties>
+        <java.version>17</java.version>
+        <spring-boot.version>2.6.3</spring-boot.version>
+    </properties>
+
+    <dependencies>
+        <!-- Add your dependencies here -->
+        <dependency>
+            <groupId>com.atdxt</groupId>
+            <artifactId>Entity</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.atdxt</groupId>
+            <artifactId>Repository</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <!-- Add other dependencies as needed -->
+    </dependencies>
+</project>

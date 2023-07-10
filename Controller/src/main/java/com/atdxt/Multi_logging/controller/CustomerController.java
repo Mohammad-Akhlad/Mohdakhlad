@@ -1,22 +1,17 @@
 package com.atdxt.Multi_logging.controller;
 
 import com.atdxt.Multi_logging.Entity.Customer;
-import com.atdxt.Multi_logging.Entity.Customer1;
 import com.atdxt.Multi_logging.Entity.Customer2;
 import com.atdxt.Multi_logging.Repository.Customer2Repository;
-import com.atdxt.Multi_logging.Repository.CustomerRepository;
-import com.atdxt.Multi_logging.Repository.Customer1Repository;
+import com.atdxt.Multi_logging.Service.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,42 +25,25 @@ public class CustomerController {
     }
 
     @Autowired
-    private CustomerRepository customerRepository;
-
-    @Autowired
-    private Customer1Repository customer1Repository;
-
-    @Autowired
-    private Customer2Repository customer2Repository;
+    private CustomerService customerService;
 
     @GetMapping("/get")
     public List<Customer> getCustomers() {
-
-        return customerRepository.findAll();
+        return customerService.getCustomers();
     }
+
     @GetMapping("/exception")
     public void createRuntimeException() {
         try {
-            int result = 10 / 0; // Division by zero to trigger the runtime exception
+            int result = 10 / 0;
         } catch (Exception e) {
             logger.error("An error occurred: ", e);
         }
     }
 
-
-    /*@GetMapping("/get/{id}")
-    public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
-        Optional<Customer> optionalCustomer = customerRepository.findById(id);
-        if (optionalCustomer.isPresent()) {
-            return ResponseEntity.ok(optionalCustomer.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }*/
-
     @GetMapping("/get/{id}")
     public ResponseEntity<Customer> getCustomerById(@PathVariable Long id) {
-        Optional<Customer> optionalCustomer = customerRepository.findById(id);
+        Optional<Customer> optionalCustomer = customerService.getCustomerById(id);
         if (optionalCustomer.isPresent()) {
             return ResponseEntity.ok(optionalCustomer.get());
         } else {
@@ -73,69 +51,73 @@ public class CustomerController {
         }
     }
 
-
-
-  /*  @PostMapping("/post")
-    public Customer saveCustomer(@RequestBody Customer customer) {
-        Customer1 customer1 = customer.getCustomer1();
-        LocalDateTime currentDateTime = LocalDateTime.now(); // Get the current date and time
-
-        customer.setCreatedOn(currentDateTime); // Set createdOn
-        customer.setLastModified(currentDateTime); // Set lastModified
-
-        if (customer1 != null) {
-            customer1.setCreatedOn(currentDateTime); // Set createdOn
-            customer1.setLastModified(currentDateTime); // Set lastModified
-            customer1.setCustomer(customer); // Set the customer for the customer1 entity
+//    @PostMapping("/post")
+//    public ResponseEntity<String> saveUser(@RequestBody Customer customer) {
+//        boolean phoneExists = customerService.isPhoneNumberExists(customer.getPhoneNumber());
+//        if (phoneExists) {
+//            return ResponseEntity.badRequest().body("Invalid user: Phone number already exists");
+//        }
+//        if (!customerService.isValidPhoneNo(customer.getPhoneNumber())) {
+//            return ResponseEntity.badRequest().body("Invalid user: Invalid phone number format");
+//        }
+//
+//        logger.info("saveCustomer");
+//        customerService.saveCustomer(customer);
+//        return ResponseEntity.ok("User saved successfully");
+//    }
+@PostMapping("/post")
+public ResponseEntity<String> saveUser(@RequestBody Customer customer) {
+    if (customer.getPhoneNumber() != null) {
+        boolean phoneExists = customerService.isPhoneNumberExists(customer.getPhoneNumber());
+        if (phoneExists) {
+            return ResponseEntity.badRequest().body("Invalid user: Phone number already exists");
         }
-
-        customerRepository.save(customer); // Save the customer entity
-
-        if (customer1 != null) {
-            customer1Repository.save(customer1); // Save the customer1 entity
+        if (!customerService.isValidPhoneNo(customer.getPhoneNumber())) {
+            return ResponseEntity.badRequest().body("Invalid user: Invalid phone number format");
         }
-
-        return customer;
-    }
-*/
-
-
-    @PostMapping("/post")
-    public Customer saveCustomer(@RequestBody Customer customer) {
-        Customer1 customer1 = customer.getCustomer1();
-        LocalDateTime currentDateTime = LocalDateTime.now(); // Get the current date and time
-
-        // Set createdOn and lastModified for the customer
-        customer.setCreatedOn(currentDateTime);
-        customer.setLastModified(currentDateTime);
-
-        // Set Date_of_Birth and Phone_no if provided
-        if (customer.getDateOfBirth() != null) {
-            customer.setDateOfBirth(customer.getDateOfBirth());
-        }
-        if (customer.getPhoneNumber() != null) {
-            customer.setPhoneNumber(customer.getPhoneNumber());
-        }
-
-        // Set createdOn and lastModified for the customer1 if present
-        if (customer1 != null) {
-            customer1.setCreatedOn(currentDateTime);
-            customer1.setLastModified(currentDateTime);
-            customer1.setCustomer(customer);
-        }
-
-        customerRepository.save(customer); // Save the customer entity
-
-        if (customer1 != null) {
-            customer1Repository.save(customer1); // Save the customer1 entity
-        }
-
-        return customer;
     }
 
+    logger.info("saveCustomer");
+    customerService.saveCustomer(customer);
+    return ResponseEntity.ok("User saved successfully");
+}
+
+
+   /* @PutMapping("/update/{id}")
+    public ResponseEntity<Customer> updateCustomer(@PathVariable("id") Long id, @RequestBody Customer updatedCustomer) {
+        try {
+            Customer customer = customerService.updateCustomer(id, updatedCustomer);
+            return ResponseEntity.ok(customer);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }*/
+
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateCustomer(@PathVariable("id") Long id, @RequestBody Customer updatedCustomer) {
+        try {
+            if (updatedCustomer.getPhoneNumber() != null) {
+                boolean phoneExists = customerService.isPhoneNumberExists(updatedCustomer.getPhoneNumber());
+                if (phoneExists) {
+                    return ResponseEntity.badRequest().body("Invalid user: Phone number already exists");
+                }
+                if (!customerService.isValidPhoneNo(updatedCustomer.getPhoneNumber())) {
+                    return ResponseEntity.badRequest().body("Invalid user: Invalid phone number format");
+                }
+            }
+
+            Customer customer = customerService.updateCustomer(id, updatedCustomer);
+            return ResponseEntity.ok("User updated successfully");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 
 
 
+    @Autowired
+    private Customer2Repository customer2Repository;
 
     @GetMapping("/get2")
     public List<Customer2> getCustomers2() {
@@ -154,69 +136,6 @@ public class CustomerController {
 
     @PostMapping("/post2")
     public Customer2 saveCustomer2(@RequestBody Customer2 customer2) {
-        LocalDateTime currentDateTime = LocalDateTime.now(); // Get the current date and time
-
-        customer2.setCreatedOn(currentDateTime); // Set createdOn
-        customer2.setLastModified(currentDateTime); // Set lastModified
-
-        customer2Repository.save(customer2); // Save the customer2 entity
-
-        return customer2;
+        return customer2Repository.save(customer2);
     }
-
-
-/*@PutMapping("/update/{id}")
-public Customer updateCustomer(@PathVariable("id") Long id, @RequestBody Customer updatedCustomer) {
-    Optional<Customer> existingCustomerOptional = customerRepository.findById(id);
-
-    if (existingCustomerOptional.isPresent()) {
-        Customer existingCustomer = existingCustomerOptional.get();
-        existingCustomer.setName(updatedCustomer.getName());
-        existingCustomer.setCity(updatedCustomer.getCity());
-
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        existingCustomer.setLastModified(currentDateTime);
-
-        // Update the customer1 if present
-        Customer1 existingCustomer1 = existingCustomer.getCustomer1();
-        Customer1 updatedCustomer1 = updatedCustomer.getCustomer1();
-        if (existingCustomer1 != null && updatedCustomer1 != null) {
-            existingCustomer1.setAge(updatedCustomer1.getAge());
-            existingCustomer1.setLastModified(currentDateTime);
-        }
-
-        return customerRepository.save(existingCustomer);
-    } else {
-        throw new EntityNotFoundException("Customer not found with ID: " + id);
-    }
-}*/
-
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable("id") Long id, @RequestBody Customer updatedCustomer) {
-        Optional<Customer> existingCustomerOptional = customerRepository.findById(id);
-
-        if (existingCustomerOptional.isPresent()) {
-            Customer existingCustomer = existingCustomerOptional.get();
-            existingCustomer.setName(updatedCustomer.getName());
-            existingCustomer.setCity(updatedCustomer.getCity());
-
-            LocalDateTime currentDateTime = LocalDateTime.now();
-            existingCustomer.setLastModified(currentDateTime);
-
-            // Update the customer1 if present
-            Customer1 existingCustomer1 = existingCustomer.getCustomer1();
-            Customer1 updatedCustomer1 = updatedCustomer.getCustomer1();
-            if (existingCustomer1 != null && updatedCustomer1 != null) {
-                existingCustomer1.setAge(updatedCustomer1.getAge());
-                existingCustomer1.setLastModified(currentDateTime);
-            }
-
-            customerRepository.save(existingCustomer);
-            return ResponseEntity.ok(existingCustomer);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }
-
-
 }
