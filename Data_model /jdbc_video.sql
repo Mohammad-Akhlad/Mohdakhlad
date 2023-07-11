@@ -1,3 +1,5 @@
+
+
 -- MySQL dump 10.13  Distrib 8.0.33, for Linux (x86_64)
 --
 -- Host: localhost    Database: jdbc_video
@@ -27,7 +29,9 @@ USE `jdbc_video`;
 -- Table structure for table `customer`
 --
 
-
+DROP TABLE IF EXISTS `customer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `customer` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
@@ -40,7 +44,9 @@ CREATE TABLE `customer` (
 -- Table structure for table `people`
 --
 
-
+DROP TABLE IF EXISTS `people`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `people` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
@@ -53,7 +59,9 @@ CREATE TABLE `people` (
 -- Table structure for table `person`
 --
 
-
+DROP TABLE IF EXISTS `person`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `person` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -67,7 +75,9 @@ CREATE TABLE `person` (
 -- Table structure for table `your_table_name`
 --
 
-
+DROP TABLE IF EXISTS `your_table_name`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `your_table_name` (
   `id` int NOT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -111,3 +121,4 @@ ADD CONSTRAINT uk_customer_phone_no UNIQUE (Phone_no);
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2023-06-20 17:41:10
+

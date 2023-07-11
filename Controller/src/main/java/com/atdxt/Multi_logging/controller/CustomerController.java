@@ -51,20 +51,7 @@ public class CustomerController {
         }
     }
 
-//    @PostMapping("/post")
-//    public ResponseEntity<String> saveUser(@RequestBody Customer customer) {
-//        boolean phoneExists = customerService.isPhoneNumberExists(customer.getPhoneNumber());
-//        if (phoneExists) {
-//            return ResponseEntity.badRequest().body("Invalid user: Phone number already exists");
-//        }
-//        if (!customerService.isValidPhoneNo(customer.getPhoneNumber())) {
-//            return ResponseEntity.badRequest().body("Invalid user: Invalid phone number format");
-//        }
-//
-//        logger.info("saveCustomer");
-//        customerService.saveCustomer(customer);
-//        return ResponseEntity.ok("User saved successfully");
-//    }
+
 @PostMapping("/post")
 public ResponseEntity<String> saveUser(@RequestBody Customer customer) {
     if (customer.getPhoneNumber() != null) {
@@ -83,21 +70,34 @@ public ResponseEntity<String> saveUser(@RequestBody Customer customer) {
 }
 
 
-   /* @PutMapping("/update/{id}")
-    public ResponseEntity<Customer> updateCustomer(@PathVariable("id") Long id, @RequestBody Customer updatedCustomer) {
-        try {
-            Customer customer = customerService.updateCustomer(id, updatedCustomer);
-            return ResponseEntity.ok(customer);
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
-    }*/
 
+
+
+
+//    @PutMapping("/update/{id}")
+//    public ResponseEntity<String> updateCustomer(@PathVariable("id") Long id, @RequestBody Customer updatedCustomer) {
+//        try {
+//            if (updatedCustomer.getPhoneNumber() != null) {
+//                boolean phoneExists = customerService.isPhoneNumberExists(updatedCustomer.getPhoneNumber());
+//                if (phoneExists) {
+//                    return ResponseEntity.badRequest().body("Invalid user: Phone number already exists");
+//                }
+//                if (!customerService.isValidPhoneNo(updatedCustomer.getPhoneNumber())) {
+//                    return ResponseEntity.badRequest().body("Invalid user: Invalid phone number format");
+//                }
+//            }
+//
+//            Customer customer = customerService.updateCustomer(id, updatedCustomer);
+//            return ResponseEntity.ok("User updated successfully");
+//        } catch (EntityNotFoundException e) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//        }
+//    }
 
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateCustomer(@PathVariable("id") Long id, @RequestBody Customer updatedCustomer) {
         try {
-            if (updatedCustomer.getPhoneNumber() != null) {
+            if (updatedCustomer.getPhoneNumber() != null && !CustomerService.isValidPhoneNo(updatedCustomer.getPhoneNumber())) {
                 boolean phoneExists = customerService.isPhoneNumberExists(updatedCustomer.getPhoneNumber());
                 if (phoneExists) {
                     return ResponseEntity.badRequest().body("Invalid user: Phone number already exists");
@@ -113,6 +113,11 @@ public ResponseEntity<String> saveUser(@RequestBody Customer customer) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
+
+
+
+
+
 
 
 

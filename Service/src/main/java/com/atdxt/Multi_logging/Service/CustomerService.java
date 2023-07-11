@@ -29,7 +29,7 @@ public class CustomerService {
 
     private static final String PHONE_NUMBER_REGEX = "\\d{10}"; // Assuming a valid phone number consists of 10 digits
 
-    public boolean isValidPhoneNo(String phoneNo) {
+    public static boolean isValidPhoneNo(String phoneNo) {
         RegexValidator regexValidator = new RegexValidator(PHONE_NUMBER_REGEX);
         return regexValidator.isValid(phoneNo);
     }
@@ -39,6 +39,7 @@ public class CustomerService {
     }
 
     public Customer saveCustomer(Customer customer) {
+
         Customer1 customer1 = customer.getCustomer1();
         LocalDateTime currentDateTime = LocalDateTime.now();
 
@@ -71,6 +72,9 @@ public class CustomerService {
         return customerRepository.findById(id);
     }
 
+
+
+
     public Customer updateCustomer(Long id, Customer updatedCustomer) {
         Optional<Customer> existingCustomerOptional = customerRepository.findById(id);
 
@@ -78,6 +82,7 @@ public class CustomerService {
             Customer existingCustomer = existingCustomerOptional.get();
             existingCustomer.setName(updatedCustomer.getName());
             existingCustomer.setCity(updatedCustomer.getCity());
+            existingCustomer.setDateOfBirth(updatedCustomer.getDateOfBirth());
 
             if (updatedCustomer.getPhoneNumber() != null) {
                 existingCustomer.setPhoneNumber(updatedCustomer.getPhoneNumber());
@@ -99,4 +104,6 @@ public class CustomerService {
             throw new EntityNotFoundException("Customer not found with id: " + id);
         }
     }
+
+
 }
