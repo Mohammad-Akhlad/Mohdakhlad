@@ -3,6 +3,7 @@ package com.atdxt.Multi_logging.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "customer")
 @JsonIgnoreProperties(ignoreUnknown = true)
+/*@EntityListeners(CustomerEntityListener.class)*/
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,22 +26,22 @@ public class Customer {
 
     @Column(name = "Date_of_Birth")
     @JsonInclude(JsonInclude.Include.NON_NULL)
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate dateOfBirth;
 
     @Column(name = "Phone_no")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String phoneNumber;
 
+    private String username; // Add the username field
 
-/*    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
-    private Customer1 customer1;*/
+    private String password; // Add the password field
 
-    /* @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-     private Customer1 customer1;
- */
     @OneToOne(mappedBy = "customer", cascade = CascadeType.PERSIST)
     @JsonIgnoreProperties("customer")
     private Customer1 customer1;
+
+
 
 
     @Column(name = "created_on")
@@ -118,5 +120,23 @@ public class Customer {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "customer1")
+/*@EntityListeners(CustomerEntityListener.class)*/
 public class Customer1 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Customer List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        #logoutForm {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #logoutForm input[type="submit"] {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        #logoutForm input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<h2>Customer List</h2>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>City</th>
+        <th>Date of Birth</th>
+        <th>Phone Number</th>
+        <th>Created On</th>
+        <th>Last Modified</th>
+        <th>Age</th>
+    </tr>
+    <!-- Loop over the customers and populate the table rows -->
+    <tr th:each="customer : ${customers}">
+        <td th:text="${customer.id}"></td>
+        <td th:text="${customer.name}"></td>
+        <td th:text="${customer.city}"></td>
+        <td th:text="${customer.dateOfBirth}"></td>
+        <td th:text="${customer.phoneNumber}"></td>
+        <td th:text="${customer.createdOn}"></td>
+        <td th:text="${customer.lastModified}"></td>
+        <td th:text="${customer.customer1.age}"></td>
+    </tr>
+</table>
+
+<form id="logoutForm" method="post">
+    <input type="submit" value="Logout">
+</form>
+<script>
+    const logoutForm = document.getElementById('logoutForm');
+    logoutForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent form submission
+        window.location.href = '/'; // Redirect to the homepage
+    });
+</script>
+
+</body>
+</html>
