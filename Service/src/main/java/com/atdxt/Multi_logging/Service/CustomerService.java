@@ -48,6 +48,21 @@ public class CustomerService {
         return customerRepository.existsByPhoneNumber(phoneNumber);
     }
 
+    public Customer2 getUserByUsername(String username) {
+        System.out.println("Getting user details for username: " + username);
+
+        Optional<Customer2> userOptional = customer2Repository.findByUsername(username);
+
+        if (userOptional.isPresent()) {
+            Customer2 customer2 = userOptional.get();
+            System.out.println("User details retrieved: " + customer2);
+            return customer2;
+        } else {
+            System.out.println("User not found for username: " + username);
+            return null;
+        }
+    }
+
 //    @Transactional
     public Customer saveCustomer(String username, String password, Customer customer) {
         LocalDateTime currentDateTime = LocalDateTime.now();
@@ -57,7 +72,8 @@ public class CustomerService {
         // Create and set the Customer2 object for provided login
         Customer2 customer2 = new Customer2();
         customer2.setUsername(username); // Set the provided username
-        customer2.setPassword(passwordEncoder.encode(password)); // Encode the provided password
+        customer2.setEncryptedPassword(password); // Encode the provided password
+//        customer2.encryptPassword();
         customer2.setCreatedOn(currentDateTime);
         customer2.setLastModified(currentDateTime);
         customer2.setCustomer(customer);
@@ -92,19 +108,37 @@ public class CustomerService {
 //            return null;
 //        }
 //    }
+// In CustomerService
+
+
+
+   /* public Customer2 getCustomerByUsername(String username, String password) {
+        System.out.println("Getting user details for username: " + username);
+
+        Customer2 customer2 = customer2Repository.findByUsername(username).orElse(null);
+
+        if (customer2 != null && customer2.isPasswordMatch(password)) {
+            System.out.println("User details retrieved: " + customer2);
+            return customer2;
+        } else {
+            System.out.println("User not found or invalid credentials for username: " + username);
+            return null;
+        }
+    }
+*/
 
     public Customer2 getCustomerByUsername(String username) {
         System.out.println("Getting user details for username: " + username);
 
-        System.out.println("User details retrieved: " + customer2Repository.findByUsername(username)
-                .orElse(null));
-        return customer2Repository.findByUsername(username)
+        Customer2 customer2 = customer2Repository.findByUsername(username)
                 .orElse(null);
+        if (customer2 != null) {
+            return customer2;
+        }
+        return null;
     }
 
-    public Optional<Customer> getCustomerById(Long id) {
-        return customerRepository.findById(id);
-    }
+
 
 //
 //    public Customer updateCustomer(Long id, Customer updatedCustomer) {
@@ -137,7 +171,7 @@ public class CustomerService {
 //    }
 
     // Getting customer2 values in customer
-    public List<Customer> getAllCustomersWithCustomer2() {
+  /*  public List<Customer> getAllCustomersWithCustomer2() {
         return customerRepository.findAllWithCustomer2();
-    }
+    }*/
 }

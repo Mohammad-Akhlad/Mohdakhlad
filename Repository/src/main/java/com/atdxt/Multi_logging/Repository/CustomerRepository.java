@@ -12,8 +12,6 @@ import java.util.List;
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     boolean existsByPhoneNumber(String phoneNumber);
 
-    @Query("SELECT c FROM Customer c LEFT JOIN FETCH c.customer2")
-    List<Customer> findAllWithCustomer2();
 
 }
 

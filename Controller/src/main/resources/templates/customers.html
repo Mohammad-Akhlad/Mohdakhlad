@@ -53,7 +53,9 @@
         <td th:text="${customer.lastModified}"></td>
         <td th:text="${customer.customer1?.age}"></td>
         <td th:text="${customer.customer2?.username}"></td>
-        <td th:text="${customer.customer2?.password}"></td>
+      <!--  <td th:text="${customer.customer2?.password}"></td>-->
+        <td th:text="${customer.customer2 != null ? customer.customer2.encryptedPassword : ''}"></td>
+
 
 
 

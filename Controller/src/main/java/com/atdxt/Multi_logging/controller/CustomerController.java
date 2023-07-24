@@ -51,6 +51,7 @@ public class CustomerController {
         return modelAndView;
     }
 
+/*
     @GetMapping("/login")
     public ModelAndView login(@RequestParam(name = "logout", required = false) String logout) {
         ModelAndView modelAndView = new ModelAndView("login");
@@ -59,8 +60,14 @@ public class CustomerController {
         }
         return modelAndView;
     }
+*/
 
-    @GetMapping("/get")
+
+
+
+
+
+   @GetMapping("/get")
     public ModelAndView getAllCustomers(ModelAndView model, Principal principal) {
         if (principal == null) {
             // The user is not logged in.
@@ -88,6 +95,7 @@ public class CustomerController {
         }
     }
 
+
     @GetMapping("/exception")
     public void createRuntimeException() {
         try {
@@ -97,24 +105,24 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("/get/{id}")
-    public ModelAndView getCustomerById(@PathVariable Long id) {
-        ModelAndView mav = new ModelAndView();
-
-        // Assuming customerService provides a method to retrieve a customer by ID
-        Optional<Customer> optionalCustomer = customerService.getCustomerById(id);
-
-        if (optionalCustomer.isPresent()) {
-            Customer customer = optionalCustomer.get();
-            mav.setViewName("customers"); // Assuming "customer_details" is the template for displaying an individual customer's details.
-            mav.addObject("customer", customer);
-        } else {
-            // Handle the case when the customer is not found with the given ID
-            mav.setViewName("customer_not_found");
-        }
-
-        return mav;
-    }
+//    @GetMapping("/get/{id}")
+//    public ModelAndView getCustomerById(@PathVariable Long id) {
+//        ModelAndView mav = new ModelAndView();
+//
+//        // Assuming customerService provides a method to retrieve a customer by ID
+//        Optional<Customer> optionalCustomer = customerService.getCustomerById(id);
+//
+//        if (optionalCustomer.isPresent()) {
+//            Customer customer = optionalCustomer.get();
+//            mav.setViewName("customers"); // Assuming "customer_details" is the template for displaying an individual customer's details.
+//            mav.addObject("customer", customer);
+//        } else {
+//            // Handle the case when the customer is not found with the given ID
+//            mav.setViewName("customer_not_found");
+//        }
+//
+//        return mav;
+//    }
 
     @Autowired
     private Customer2Repository customer2Repository;
@@ -138,7 +146,7 @@ public class CustomerController {
 
         // Encode the password using the passwordEncoder and set it in the Customer2 object
         String encodedPassword = passwordEncoder.encode(password);
-        customer2.setPassword(encodedPassword);
+        customer2.setEncryptedPassword(encodedPassword);
 
         customer2.setCreatedOn(LocalDateTime.now());
         customer2.setLastModified(LocalDateTime.now());
