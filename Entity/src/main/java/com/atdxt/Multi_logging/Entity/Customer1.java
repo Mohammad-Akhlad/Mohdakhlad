@@ -24,10 +24,16 @@ public class Customer1 {
     @Column(name = "last_modified")
     private LocalDateTime lastModified;
 
-    @OneToOne
-    @JoinColumn(name = "customer_id", referencedColumnName = "id")
 
+   /* @OneToOne
+    @JoinColumn(name = "customer_id", referencedColumnName = "id")
+*/
+
+    @OneToOne
+    @JoinColumn(name = "customer_id")
     private Customer customer;
+
+
 
     // Constructors, Getters, and Setters
 

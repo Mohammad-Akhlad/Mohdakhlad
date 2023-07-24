@@ -123,13 +123,33 @@ public class CustomerController {
     }
 */
   @PostMapping("/signup")
-  public ModelAndView signup(@ModelAttribute("customer") @DateTimeFormat(pattern = "dd-MM-yyyy") Customer customer) {
+  public ModelAndView signup(@ModelAttribute("customer") Customer customer,
+                             @RequestParam("username") String username,
+                             @RequestParam("password") String password,
+                             @RequestParam("dateOfBirth") String dateOfBirth) {
+
+      // Convert the dateOfBirth string to LocalDate using a custom DateTimeFormatter
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+      LocalDate parsedDateOfBirth = LocalDate.parse(dateOfBirth, formatter);
+
+      // Set the parsed dateOfBirth in the Customer object
+      customer.setDateOfBirth(parsedDateOfBirth);
+
+      // Create a new Customer2 object and set the username and password
+      Customer2 customer2 = new Customer2();
+      customer2.setUsername(username);
+      customer2.setPassword(password);
+
+      // Associate the Customer2 object with the Customer object
+      customer.setCustomer2(customer2);
+
       // Save the customer to the table using the customerService
       customerService.saveCustomer(customer);
 
       ModelAndView modelAndView = new ModelAndView("redirect:/get"); // Redirect to the customer list page or any other desired page
       return modelAndView;
   }
+
 
 
 

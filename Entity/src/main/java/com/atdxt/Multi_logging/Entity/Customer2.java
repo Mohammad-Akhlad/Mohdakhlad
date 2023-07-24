@@ -1,9 +1,9 @@
 package com.atdxt.Multi_logging.Entity;
 
-import javax.persistence.*;
-import java.nio.charset.StandardCharsets;
+import jakarta.persistence.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import java.time.LocalDateTime;
-import java.util.Base64;
 
 @Entity
 @Table(name = "customer2")
@@ -24,21 +24,27 @@ public class Customer2 {
     @Column(name = "last_modified")
     private LocalDateTime lastModified;
 
-    // Constructors, Getters, and Setters
+
+    @OneToOne(mappedBy = "customer2")
+    private Customer customer;
+
+
+    // Non-static field to store the BCryptPasswordEncoder
+    @Transient
+    private final BCryptPasswordEncoder passwordEncoder;
+
+    // Transient field to store the raw password before encoding
 
     public Customer2() {
-        // Default constructor
+        // Initialize the passwordEncoder field in the constructor
+        this.passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    // Other constructors
+    // Other constructors, getters, and setters
 
-    public Long getId() {
-        return id;
-    }
+    // Getters and setters for the fields
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // ...
 
     public String getUsername() {
         return username;
@@ -53,7 +59,7 @@ public class Customer2 {
     }
 
     public void setPassword(String password) {
-        this.encryptedPassword = encryptPassword(password);
+        this.encryptedPassword = passwordEncoder.encode(password);
     }
 
     public LocalDateTime getCreatedOn() {
@@ -72,15 +78,16 @@ public class Customer2 {
         this.lastModified = lastModified;
     }
 
-    // Utility methods for encryption and decryption
-
-    private String encryptPassword(String password) {
-        byte[] encodedBytes = Base64.getEncoder().encode(password.getBytes(StandardCharsets.UTF_8));
-        return new String(encodedBytes, StandardCharsets.UTF_8);
+    public Customer getCustomer() {
+        return customer;
     }
 
-    public String getDecryptedPassword() {
-        byte[] decodedBytes = Base64.getDecoder().decode(encryptedPassword.getBytes(StandardCharsets.UTF_8));
-        return new String(decodedBytes, StandardCharsets.UTF_8);
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
+
+   /* // Method to check if the raw password matches the encoded password
+    public boolean isPasswordMatch(String rawPassword) {
+        return passwordEncoder.matches(rawPassword, encryptedPassword);
+    }*/
 }

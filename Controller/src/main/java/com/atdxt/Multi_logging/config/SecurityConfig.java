@@ -1,4 +1,3 @@
-
 package com.atdxt.Multi_logging.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,28 +24,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-       /* http
-                .authorizeRequests(authorize -> authorize
-                .antMatchers("/").permitAll() // Allow access to the home page
+
+
+
+        http
+                .authorizeRequests()
+                .antMatchers("/", "/signup").permitAll()
                 .anyRequest().authenticated()
-                )
-
-                .formLogin(formLogin -> formLogin
-                        .defaultSuccessUrl("/get") // Specify the URL to redirect after successful login
-                        .permitAll()
-
-                );*/
+                .and()
+                .formLogin()
+                .defaultSuccessUrl("/get")
+                .permitAll();
 
 
-            http
-                    .authorizeRequests()
-                    .antMatchers("/", "/signup").permitAll()
-                    .anyRequest().authenticated()
-                    .and()
-                    .formLogin()
-                    .defaultSuccessUrl("/get")
-                    .permitAll();
-        }
+    }
 
 
 
@@ -69,7 +60,3 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 }
-
-
-
-

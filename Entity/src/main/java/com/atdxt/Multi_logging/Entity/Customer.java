@@ -1,4 +1,3 @@
-
 package com.atdxt.Multi_logging.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -18,6 +17,14 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer1")
+    private Customer1 customer1;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer2")
+    private Customer2 customer2;
+
     @Column(name = "name")
     private String name;
 
@@ -33,15 +40,17 @@ public class Customer {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String phoneNumber;
 
-    private String username; // Add the username field
+  /*private String username; // Add the username field
 
-    private String password; // Add the password field
+    private String password;*/ // Add the password field
 
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.PERSIST)
+    /*@OneToOne(mappedBy = "customer", cascade = CascadeType.PERSIST)
     @JsonIgnoreProperties("customer")
     private Customer1 customer1;
 
-
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.PERSIST)
+    @JsonIgnoreProperties("customer")
+    private Customer2 customer2;*/
 
 
     @Column(name = "created_on")
@@ -122,9 +131,19 @@ public class Customer {
         this.phoneNumber = phoneNumber;
     }
 
+    public Customer2 getCustomer2() {  return customer2;  }
 
+    // public void setCustomer2(Customer2 customer2) { this.customer2 = customer2; }
 
-    public String getUsername() {
+    public void setCustomer2(Customer2 customer2) {
+        this.customer2 = customer2;
+        if (customer2 != null) {
+            customer2.setCustomer(this);
+        }
+
+    }
+
+   /*public String getUsername() {
         return username;
     }
 
@@ -138,5 +157,7 @@ public class Customer {
 
     public void setPassword(String password) {
         this.password = password;
-    }
+    }*/
 }
+
+

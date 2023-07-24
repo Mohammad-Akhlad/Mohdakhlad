@@ -1,9 +1,12 @@
+
 package com.atdxt.Multi_logging.Service;
 
 import com.atdxt.Multi_logging.Entity.Customer;
 import com.atdxt.Multi_logging.Entity.Customer1;
+import com.atdxt.Multi_logging.Entity.Customer2;
 import com.atdxt.Multi_logging.Repository.CustomerRepository;
 import com.atdxt.Multi_logging.Repository.Customer1Repository;
+import com.atdxt.Multi_logging.Repository.Customer2Repository;
 import org.apache.commons.validator.routines.RegexValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,9 @@ public class CustomerService {
     @Autowired
     private Customer1Repository customer1Repository;
 
+    @Autowired
+    private Customer2Repository customer2Repository;
+
     public List<Customer> getCustomers() {
         return customerRepository.findAll();
     }
@@ -38,34 +44,67 @@ public class CustomerService {
         return customerRepository.existsByPhoneNumber(phoneNumber);
     }
 
-    public Customer saveCustomer(Customer customer) {
-        Customer1 customer1 = customer.getCustomer1();
-        LocalDateTime currentDateTime = LocalDateTime.now();
 
+
+
+    public Customer saveCustomer(Customer customer) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
         customer.setCreatedOn(currentDateTime);
         customer.setLastModified(currentDateTime);
+        Customer2 customer2 = new Customer2();
+        customer2.setCreatedOn(currentDateTime);
+        customer2.setLastModified(currentDateTime);
+        customer2.setUsername(customer.getCustomer2().getUsername());
+        customer2.setPassword(customer.getCustomer2().getPassword());
+        customer2.setCustomer(customer);
+        customer.setCustomer2(customer2); // Associate Customer2 with Customer
 
-        if (customer.getDateOfBirth() != null) {
-            customer.setDateOfBirth(customer.getDateOfBirth());
-        }
-//        if (customer.getPhoneNumber() != null) {
-//            customer.setPhoneNumber(customer.getPhoneNumber());
+
+//        if (customer.getDateOfBirth() != null) {
+//            customer.setDateOfBirth(customer.getDateOfBirth());
 //        }
 
+        Customer1 customer1 = customer.getCustomer1();
         if (customer1 != null) {
             customer1.setCreatedOn(currentDateTime);
             customer1.setLastModified(currentDateTime);
+            customer1.setAge(customer.getCustomer1().getAge());
             customer1.setCustomer(customer);
+
         }
-
-        customerRepository.save(customer);
-
-        if (customer1 != null) {
-            customer1Repository.save(customer1);
-        }
-
-        return customer;
+        return customerRepository.save(customer);
     }
+
+  /*  public Customer saveCustomer(Customer customer) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        customer.setCreatedOn(currentDateTime);
+        customer.setLastModified(currentDateTime);
+
+        // Get the Customer1 and Customer2 objects from the provided Customer entity
+        Customer1 customer1 = customer.getCustomer1();
+        Customer2 customer2 = customer.getCustomer2();
+
+        // Set the createdOn and lastModified for Customer1 and Customer2, if available
+        if (customer1 != null) {
+            customer1.setCreatedOn(currentDateTime);
+            customer1.setLastModified(currentDateTime);
+        }
+
+        if (customer2 != null) {
+            customer2.setCreatedOn(currentDateTime);
+            customer2.setLastModified(currentDateTime);
+        }
+
+        // Set the relationship between Customer and Customer2
+        if (customer2 != null) {
+            customer2.setCustomer(customer);
+        }
+
+        // Save Customer and related entities to the database
+        return customerRepository.save(customer);
+    }*/
+
+
 
     public Optional<Customer> getCustomerById(Long id) {
         return customerRepository.findById(id);
@@ -98,6 +137,12 @@ public class CustomerService {
         } else {
             throw new EntityNotFoundException("Customer not found with id: " + id);
         }
+    }
+
+
+    //getting customer2 values in customer
+    public List<Customer> getAllCustomersWithCustomer2() {
+        return customerRepository.findAllWithCustomer2();
     }
 }
 
