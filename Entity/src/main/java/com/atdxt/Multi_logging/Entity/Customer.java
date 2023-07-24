@@ -1,13 +1,15 @@
 
 package com.atdxt.Multi_logging.Entity;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+
 
 @Entity
 @Table(name = "customer")
@@ -17,6 +19,32 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+   /* public String getDecryptedPassword() {
+        if (customer2 != null) {
+            return customer2.getDecryptedPassword();
+        } else {
+            return null;
+        }
+    }*/
+
+  /*  @OneToOne(mappedBy = "customer", cascade = CascadeType.PERSIST)
+    private Customer1 customer1;
+
+    //mapping with customer2 entity
+*//*
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+*//*
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.ALL)
+    private Customer2 customer2;
+*/
+  @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
+  private Customer1 customer1;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
+    private Customer2 customer2;
+
+
 
     @Column(name = "name")
     private String name;
@@ -33,15 +61,21 @@ public class Customer {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String phoneNumber;
 
-    private String username; // Add the username field
+    private String username;
 
-    private String password; // Add the password field
+    private String password;
 
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.PERSIST)
+  /*private String username; // Add the username field
+
+    private String password;*/ // Add the password field
+
+    /*@OneToOne(mappedBy = "customer", cascade = CascadeType.PERSIST)
     @JsonIgnoreProperties("customer")
     private Customer1 customer1;
 
-
+    @OneToOne(mappedBy = "customer", cascade = CascadeType.PERSIST)
+    @JsonIgnoreProperties("customer")
+    private Customer2 customer2;*/
 
 
     @Column(name = "created_on")
@@ -122,9 +156,38 @@ public class Customer {
         this.phoneNumber = phoneNumber;
     }
 
+    public Customer2 getCustomer2() {  return customer2;  }
+
+   // public void setCustomer2(Customer2 customer2) { this.customer2 = customer2; }
+
+    public void setCustomer2(Customer2 customer2) {
+        this.customer2 = customer2;
+        if (customer2 != null) {
+            customer2.setCustomer(this);
+        }
+
+    }
 
 
     public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
+   /*public String getUsername() {
         return username;
     }
 
@@ -138,5 +201,5 @@ public class Customer {
 
     public void setPassword(String password) {
         this.password = password;
-    }
+    }*/
 }

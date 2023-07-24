@@ -2,13 +2,17 @@ package com.atdxt.Multi_logging.Service;
 
 import com.atdxt.Multi_logging.Entity.Customer;
 import com.atdxt.Multi_logging.Entity.Customer1;
+import com.atdxt.Multi_logging.Entity.Customer2;
 import com.atdxt.Multi_logging.Repository.CustomerRepository;
 import com.atdxt.Multi_logging.Repository.Customer1Repository;
+import com.atdxt.Multi_logging.Repository.Customer2Repository;
 import org.apache.commons.validator.routines.RegexValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
+//import javax.persistence.EntityNotFoundException;
+//import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +26,12 @@ public class CustomerService {
     @Autowired
     private Customer1Repository customer1Repository;
 
+    @Autowired
+    private Customer2Repository customer2Repository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public List<Customer> getCustomers() {
         return customerRepository.findAll();
     }
@@ -29,7 +39,7 @@ public class CustomerService {
 
     private static final String PHONE_NUMBER_REGEX = "\\d{10}"; // Assuming a valid phone number consists of 10 digits
 
-    public static boolean isValidPhoneNo(String phoneNo) {
+    public boolean isValidPhoneNo(String phoneNo) {
         RegexValidator regexValidator = new RegexValidator(PHONE_NUMBER_REGEX);
         return regexValidator.isValid(phoneNo);
     }
@@ -38,74 +48,96 @@ public class CustomerService {
         return customerRepository.existsByPhoneNumber(phoneNumber);
     }
 
-    public Customer saveCustomer(Customer customer) {
-
-        Customer1 customer1 = customer.getCustomer1();
+//    @Transactional
+    public Customer saveCustomer(String username, String password, Customer customer) {
         LocalDateTime currentDateTime = LocalDateTime.now();
-
         customer.setCreatedOn(currentDateTime);
         customer.setLastModified(currentDateTime);
 
-        if (customer.getDateOfBirth() != null) {
-            customer.setDateOfBirth(customer.getDateOfBirth());
-        }
-//        if (customer.getPhoneNumber() != null) {
-//            customer.setPhoneNumber(customer.getPhoneNumber());
-//        }
+        // Create and set the Customer2 object for provided login
+        Customer2 customer2 = new Customer2();
+        customer2.setUsername(username); // Set the provided username
+        customer2.setPassword(passwordEncoder.encode(password)); // Encode the provided password
+        customer2.setCreatedOn(currentDateTime);
+        customer2.setLastModified(currentDateTime);
+        customer2.setCustomer(customer);
+        customer.setCustomer2(customer2); // Associate Customer2 with Customer
 
+        // You can also handle the individual login example here if needed
+
+        // Code for Customer1 association (if applicable) remains unchanged
+        Customer1 customer1 = customer.getCustomer1();
         if (customer1 != null) {
             customer1.setCreatedOn(currentDateTime);
             customer1.setLastModified(currentDateTime);
+            customer1.setAge(customer.getCustomer1().getAge());
             customer1.setCustomer(customer);
         }
 
-        customerRepository.save(customer);
+        return customerRepository.save(customer);
+    }
 
-        if (customer1 != null) {
-            customer1Repository.save(customer1);
-        }
+//
+//    public User getUserByUsername(String username) {
+//        System.out.println("Getting user details for username: " + username);
+//
+//        Optional<User> userOptional = userRepository1.findByUsername(username);
+//
+//        if (userOptional.isPresent()) {
+//            User user = userOptional.get();
+//            System.out.println("User details retrieved: " + user);
+//            return user;
+//        } else {
+//            System.out.println("User not found for username: " + username);
+//            return null;
+//        }
+//    }
 
-        return customer;
+    public Customer2 getCustomerByUsername(String username) {
+        System.out.println("Getting user details for username: " + username);
+
+        System.out.println("User details retrieved: " + customer2Repository.findByUsername(username)
+                .orElse(null));
+        return customer2Repository.findByUsername(username)
+                .orElse(null);
     }
 
     public Optional<Customer> getCustomerById(Long id) {
         return customerRepository.findById(id);
     }
 
+//
+//    public Customer updateCustomer(Long id, Customer updatedCustomer) {
+//        Optional<Customer> existingCustomerOptional = customerRepository.findById(id);
+//
+//        if (existingCustomerOptional.isPresent()) {
+//            Customer existingCustomer = existingCustomerOptional.get();
+//            existingCustomer.setName(updatedCustomer.getName());
+//            existingCustomer.setCity(updatedCustomer.getCity());
+//
+//            if (updatedCustomer.getPhoneNumber() != null) {
+//                existingCustomer.setPhoneNumber(updatedCustomer.getPhoneNumber());
+//            }
+//
+//            LocalDateTime currentDateTime = LocalDateTime.now();
+//            existingCustomer.setLastModified(currentDateTime);
+//
+//            Customer1 existingCustomer1 = existingCustomer.getCustomer1();
+//            Customer1 updatedCustomer1 = updatedCustomer.getCustomer1();
+//            if (existingCustomer1 != null && updatedCustomer1 != null) {
+//                existingCustomer1.setAge(updatedCustomer1.getAge());
+//                existingCustomer1.setLastModified(currentDateTime);
+//            }
+//
+//            customerRepository.save(existingCustomer);
+//            return existingCustomer;
+//        } else {
+//            throw new EntityNotFoundException("Customer not found with id: " + id);
+//        }
+//    }
 
-
-
-    public Customer updateCustomer(Long id, Customer updatedCustomer) {
-        Optional<Customer> existingCustomerOptional = customerRepository.findById(id);
-
-        if (existingCustomerOptional.isPresent()) {
-            Customer existingCustomer = existingCustomerOptional.get();
-            existingCustomer.setName(updatedCustomer.getName());
-            existingCustomer.setCity(updatedCustomer.getCity());
-            existingCustomer.setDateOfBirth(updatedCustomer.getDateOfBirth());
-
-            if (updatedCustomer.getPhoneNumber() != null) {
-                existingCustomer.setPhoneNumber(updatedCustomer.getPhoneNumber());
-            }
-
-            LocalDateTime currentDateTime = LocalDateTime.now();
-            existingCustomer.setLastModified(currentDateTime);
-
-            Customer1 existingCustomer1 = existingCustomer.getCustomer1();
-            Customer1 updatedCustomer1 = updatedCustomer.getCustomer1();
-            if (existingCustomer1 != null && updatedCustomer1 != null) {
-                existingCustomer1.setAge(updatedCustomer1.getAge());
-                existingCustomer1.setLastModified(currentDateTime);
-            }
-
-            customerRepository.save(existingCustomer);
-            return existingCustomer;
-        } else {
-            throw new EntityNotFoundException("Customer not found with id: " + id);
-        }
+    // Getting customer2 values in customer
+    public List<Customer> getAllCustomersWithCustomer2() {
+        return customerRepository.findAllWithCustomer2();
     }
-
-
 }
-
-

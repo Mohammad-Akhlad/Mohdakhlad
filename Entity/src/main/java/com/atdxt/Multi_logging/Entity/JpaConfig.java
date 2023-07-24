@@ -1,3 +1,4 @@
+
 package com.atdxt.Multi_logging.Entity;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
@@ -38,3 +38,6 @@ public class JpaConfig {
         return entityManagerFactoryBean;
     }
 }
+
+
+
