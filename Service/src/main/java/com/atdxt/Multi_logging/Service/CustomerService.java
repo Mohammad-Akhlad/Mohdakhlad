@@ -1,5 +1,6 @@
 package com.atdxt.Multi_logging.Service;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.atdxt.Multi_logging.Entity.Customer;
 import com.atdxt.Multi_logging.Entity.Customer1;
 import com.atdxt.Multi_logging.Entity.Customer2;
@@ -11,14 +12,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-//import javax.persistence.EntityNotFoundException;
-//import javax.transaction.Transactional;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CustomerService {
+
+//    private final AmazonS3 amazonS3;
+//
+//    @Autowired
+//    public CustomerService(AmazonS3 amazonS3) {
+//        this.amazonS3 = amazonS3;
+//    }
+
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -32,7 +40,7 @@ public class CustomerService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public List<Customer> getCustomers() {
+        public List<Customer> getCustomers() {
         return customerRepository.findAll();
     }
 
@@ -93,39 +101,7 @@ public class CustomerService {
         return customerRepository.save(customer);
     }
 
-//
-//    public User getUserByUsername(String username) {
-//        System.out.println("Getting user details for username: " + username);
-//
-//        Optional<User> userOptional = userRepository1.findByUsername(username);
-//
-//        if (userOptional.isPresent()) {
-//            User user = userOptional.get();
-//            System.out.println("User details retrieved: " + user);
-//            return user;
-//        } else {
-//            System.out.println("User not found for username: " + username);
-//            return null;
-//        }
-//    }
-// In CustomerService
 
-
-
-   /* public Customer2 getCustomerByUsername(String username, String password) {
-        System.out.println("Getting user details for username: " + username);
-
-        Customer2 customer2 = customer2Repository.findByUsername(username).orElse(null);
-
-        if (customer2 != null && customer2.isPasswordMatch(password)) {
-            System.out.println("User details retrieved: " + customer2);
-            return customer2;
-        } else {
-            System.out.println("User not found or invalid credentials for username: " + username);
-            return null;
-        }
-    }
-*/
 
     public Customer2 getCustomerByUsername(String username) {
         System.out.println("Getting user details for username: " + username);
@@ -140,38 +116,4 @@ public class CustomerService {
 
 
 
-//
-//    public Customer updateCustomer(Long id, Customer updatedCustomer) {
-//        Optional<Customer> existingCustomerOptional = customerRepository.findById(id);
-//
-//        if (existingCustomerOptional.isPresent()) {
-//            Customer existingCustomer = existingCustomerOptional.get();
-//            existingCustomer.setName(updatedCustomer.getName());
-//            existingCustomer.setCity(updatedCustomer.getCity());
-//
-//            if (updatedCustomer.getPhoneNumber() != null) {
-//                existingCustomer.setPhoneNumber(updatedCustomer.getPhoneNumber());
-//            }
-//
-//            LocalDateTime currentDateTime = LocalDateTime.now();
-//            existingCustomer.setLastModified(currentDateTime);
-//
-//            Customer1 existingCustomer1 = existingCustomer.getCustomer1();
-//            Customer1 updatedCustomer1 = updatedCustomer.getCustomer1();
-//            if (existingCustomer1 != null && updatedCustomer1 != null) {
-//                existingCustomer1.setAge(updatedCustomer1.getAge());
-//                existingCustomer1.setLastModified(currentDateTime);
-//            }
-//
-//            customerRepository.save(existingCustomer);
-//            return existingCustomer;
-//        } else {
-//            throw new EntityNotFoundException("Customer not found with id: " + id);
-//        }
-//    }
-
-    // Getting customer2 values in customer
-  /*  public List<Customer> getAllCustomersWithCustomer2() {
-        return customerRepository.findAllWithCustomer2();
-    }*/
 }

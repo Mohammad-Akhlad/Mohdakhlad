@@ -41,6 +41,7 @@
         <th>Age</th>
         <th>Username</th>
         <th>Password</th>
+        <th>Image</th>
     </tr>
     <!-- Loop over the customers and populate the table rows -->
     <tr th:each="customer : ${customers}">
@@ -56,8 +57,9 @@
       <!--  <td th:text="${customer.customer2?.password}"></td>-->
         <td th:text="${customer.customer2 != null ? customer.customer2.encryptedPassword : ''}"></td>
 
-
-
+        <td>
+            <img class="customer-image" th:src="${customer.imageUrl}" alt="Customer Image"/>
+        </td>
 
         <!--     <td th:text="${customer.customer2?.username}"></td>
              <td th:text="${customer.customer2?.password}"></td>-->

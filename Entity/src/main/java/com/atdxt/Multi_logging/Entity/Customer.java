@@ -20,31 +20,15 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-   /* public String getDecryptedPassword() {
-        if (customer2 != null) {
-            return customer2.getDecryptedPassword();
-        } else {
-            return null;
-        }
-    }*/
 
-  /*  @OneToOne(mappedBy = "customer", cascade = CascadeType.PERSIST)
-    private Customer1 customer1;
 
-    //mapping with customer2 entity
-*//*
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
-*//*
-    @OneToOne(fetch = FetchType.EAGER, mappedBy = "customer", cascade = CascadeType.ALL)
-    private Customer2 customer2;
-*/
   @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
   private Customer1 customer1;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
     private Customer2 customer2;
 
-
+    private String imageUrl;
 
     @Column(name = "name")
     private String name;
@@ -187,19 +171,12 @@ public class Customer {
     }
 
 
-   /*public String getUsername() {
-        return username;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }*/
 }

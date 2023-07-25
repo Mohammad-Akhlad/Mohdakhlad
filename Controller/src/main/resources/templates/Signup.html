@@ -60,7 +60,8 @@ input[type="submit"]:hover {
 <body>
 <h2>Signup Page</h2>
 
-<form th:action="@{/signup}"  th:object=${customer} method="post">
+
+  <form th:action="@{/signup}" th:object="${customer}" method="post" enctype="multipart/form-data">
   <!-- Add form fields for each column of your table -->
   <label for="name">Name:</label>
   <input type="text" id="name" name="name" th:field="*{name}" required><br><br>
@@ -68,8 +69,6 @@ input[type="submit"]:hover {
   <label for="city">City:</label>
   <input type="text" id="city" name="city" th:field="*{city}" required><br><br>
 
-  <!-- <label for="dateOfBirth">Date of Birth:</label>
-   <input type="date" id="dateOfBirth" name="dateOfBirth" th:field="*{dateOfBirth}" required><br><br>-->
 
   <label for="dateOfBirth">Date of Birth:</label>
   <input type="text" id="dateOfBirth" name="dateOfBirth" th:field="*{dateOfBirth}" placeholder="dd-MM-yyyy" required><br><br>
@@ -80,32 +79,22 @@ input[type="submit"]:hover {
   <label for="phoneNumber">Phone Number:</label>
   <input type="text" id="phoneNumber" name="phoneNumber" th:field="*{phoneNumber}" required><br><br>
 
-  <!--<label for="age">Age:</label>
-  <input type="number" id="age" name="age" th:field="*{Customer1.age}" required><br><br>-->
 
-
-  <!--<label for="age">Age:</label>
-  <input type="number" id="age" name="customer1.age" th:field="*{customer1.age}" required><br><br>-->
 
   <label for="age">Age:</label>
   <input type="number" id="age" name="customer1.age" th:field="*{customer1.age}" required><br><br>
 
-  <!-- <label for="username">Username:</label>
-   <input type="text" id="username" name="customer2.username" th:field="*{customer2.username}" required><br><br>
- -->
+
 
   <label for="username">Username:</label>
   <input type="text" id="username" name="username"  required><br><br>
 
-  <!--<label for="password">Password:</label>
-  <input type="password" id="password" name="customer2.password" th:field="*{customer2.password}" required><br><br>
--->
 
   <label for="password">Password:</label>
   <input type="password" id="password"  name="password" required><br><br>
 
-
-  <!-- Add more fields for other columns -->
+    <label for="imageFile">Profile Image:</label>
+    <input type="file" id="imageFile" name="imageFile"><br><br>
 
   <input type="submit" value="Signup">
 </form>

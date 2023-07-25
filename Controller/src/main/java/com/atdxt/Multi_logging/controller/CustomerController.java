@@ -1,6 +1,8 @@
 
 package com.atdxt.Multi_logging.controller;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.atdxt.Multi_logging.Entity.Customer;
 import com.atdxt.Multi_logging.Entity.Customer2;
 import com.atdxt.Multi_logging.Repository.Customer2Repository;
@@ -8,12 +10,14 @@ import com.atdxt.Multi_logging.Service.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
@@ -127,11 +131,20 @@ public class CustomerController {
     @Autowired
     private Customer2Repository customer2Repository;
 
+
+
+    @Autowired
+    private AmazonS3 amazonS3;
+
+    @Value("${aws.s3.bucketName}")
+    private String bucketName;
+
     @PostMapping("/signup")
     public ModelAndView signup(@ModelAttribute("customer") Customer customer,
                                @RequestParam("username") String username,
                                @RequestParam("password") String password,
-                               @RequestParam("dateOfBirth") String dateOfBirth) {
+                               @RequestParam("dateOfBirth") String dateOfBirth,
+                               @RequestParam("imageFile") MultipartFile imageFile) {
 
         // Convert the dateOfBirth string to LocalDate using a custom DateTimeFormatter
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -155,12 +168,40 @@ public class CustomerController {
         customer.setCustomer2(customer2);
 
         // Save the customer to the table using the customerService
+        /*customerService.saveCustomer(username, encodedPassword, customer);*/
+
+        try {
+            // Upload the image to S3 bucket if an image file is provided
+            if (!imageFile.isEmpty()) {
+                String fileName = imageFile.getOriginalFilename();
+                String imageUrl = uploadImageToS3(fileName, imageFile); // Method to upload the image to S3
+                customer.setImageUrl(imageUrl); // Set the image URL in the Customer object
+            }
+        } catch (Exception e) {
+            // Handle the exception (e.g., return an error response)
+            e.printStackTrace();
+            return new ModelAndView("redirect:/error"); // Redirect to an error page on image upload failure
+        }
+
+        // Save the updated customer (with image URL) to the database
         customerService.saveCustomer(username, encodedPassword, customer);
 
         ModelAndView modelAndView = new ModelAndView("redirect:/get"); // Redirect to the customer list page or any other desired page
         return modelAndView;
     }
+    private String uploadImageToS3(String fileName, MultipartFile imageFile) {
+        try {
+            // Upload the image to S3 bucket
+            amazonS3.putObject(new PutObjectRequest(bucketName, fileName, imageFile.getInputStream(), null));
 
+            // Get the URL of the uploaded image
+            String imageUrl = amazonS3.getUrl(bucketName, fileName).toString();
+
+            return imageUrl;
+        } catch (Exception e) {
+            throw new RuntimeException("Image upload to S3 failed", e);
+        }
+    }
 
 
 
