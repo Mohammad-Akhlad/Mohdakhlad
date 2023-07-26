@@ -259,3 +259,34 @@ curl -X GET http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/custom
 curl -X GET http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/get
 
 
+
+## S3 bucket with dev 
+
+aws.accessKey=AKIAQLSL4MY3G2MSCQXB
+
+aws.secretKey=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
+
+aws.region= ap-south-1
+
+aws.s3.bucketName=my-dev-bucket1
+
+
+## S3 bucket with prod
+
+aws.accessKey=AKIAQLSL4MY3G2MSCQXB
+
+aws.secretKey=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
+
+aws.region= ap-south-1
+
+aws.s3.bucketName=my-prod-bucket1
+
+
+
+
+
+
+
+
+
+

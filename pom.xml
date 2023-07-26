@@ -202,15 +202,15 @@
     </distributionManagement>
     <profiles>
         <profile>
-            <id>local</id>
+            <id>dev</id>
             <properties>
-                <spring.profiles.active>local</spring.profiles.active>
+                <spring.profiles.active>dev</spring.profiles.active>
             </properties>
         </profile>
         <profile>
-            <id>rds</id>
+            <id>prod</id>
             <properties>
-                <spring.profiles.active>rds</spring.profiles.active>
+                <spring.profiles.active>prod</spring.profiles.active>
             </properties>
         </profile>
     </profiles>

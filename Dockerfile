@@ -8,7 +8,7 @@ WORKDIR /app
 COPY Controller/target/Controller-0.0.1-SNAPSHOT.war app.war
 
 
-ENV SPRING_PROFILES_ACTIVE=rds
+ENV SPRING_PROFILES_ACTIVE=prod
 
 
 # Expose the port your application runs on
