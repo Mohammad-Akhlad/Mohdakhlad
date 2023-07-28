@@ -28,6 +28,8 @@ public class Customer {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
     private Customer2 customer2;
 
+
+    @Column(name = "image_url")
     private String imageUrl;
 
     @Column(name = "name")

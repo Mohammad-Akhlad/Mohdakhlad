@@ -12,6 +12,18 @@ if [ -z "$1" ]; then
   exit 1
 fi
 
+
+
+export SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/Akhlad123
+export SPRING_DATASOURCE_USERNAME=mohdakhlad
+export SPRING_DATASOURCE_PASSWORD=Akhlad123
+
+
+#
+#export SPRING_DATASOURCE_URL=jdbc:postgresql://akhlad-rds.cvc0llveztzp.ap-south-1.rds.amazonaws.com:5432/Akhlad123
+#export SPRING_DATASOURCE_USERNAME=mohdakhlad
+#export SPRING_DATASOURCE_PASSWORD=Akhlad123
+
 # Get the script's directory
 script_directory="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
