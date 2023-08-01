@@ -177,6 +177,7 @@ public class CustomerController {
                                @RequestParam("username") String username,
                                @RequestParam("password") String password,
                                @RequestParam("dateOfBirth") String dateOfBirth,
+                               @RequestParam("email") String email,
                                @RequestParam("imageFile") MultipartFile imageFile) {
 
         // Convert the dateOfBirth string to LocalDate using a custom DateTimeFormatter
@@ -185,6 +186,7 @@ public class CustomerController {
 
         // Set the parsed dateOfBirth in the Customer object
         customer.setDateOfBirth(parsedDateOfBirth);
+        customer.setEmail(email);
 
         // Create a new Customer2 object and set the username
         Customer2 customer2 = new Customer2();

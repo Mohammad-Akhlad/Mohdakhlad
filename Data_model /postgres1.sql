@@ -1,5 +1,5 @@
 CREATE TABLE customer (
-  id SERIAL NOT Null,
+  id SERIAL NOT NULL,
   city VARCHAR(255) DEFAULT NULL,
   created_on TIMESTAMP(6) DEFAULT NULL,
   "date_of_birth" DATE DEFAULT NULL,
@@ -8,8 +8,10 @@ CREATE TABLE customer (
   name VARCHAR(255) DEFAULT NULL,
   password VARCHAR(255) DEFAULT NULL,
   "phone_no" VARCHAR(255) DEFAULT NULL,
+  email VARCHAR(255) DEFAULT NULL, -- Add the "email" column definition here
   username VARCHAR(255) DEFAULT NULL
 );
+
 
 CREATE TABLE customer1 (
   id SERIAL NOT Null,

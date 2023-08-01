@@ -52,6 +52,11 @@ public class CustomerService {
         return regexValidator.isValid(phoneNo);
     }
 
+    public boolean isEmailExists(String email) {
+        return customerRepository.existsByEmail(email);
+    }
+
+
     public boolean isPhoneNumberExists(String phoneNumber) {
         return customerRepository.existsByPhoneNumber(phoneNumber);
     }

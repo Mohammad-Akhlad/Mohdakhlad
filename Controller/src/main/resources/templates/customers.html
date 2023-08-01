@@ -36,12 +36,14 @@
         <th>City</th>
         <th>Date of Birth</th>
         <th>Phone Number</th>
+        <th>Email</th>
         <th>Created On</th>
         <th>Last Modified</th>
         <th>Age</th>
         <th>Username</th>
         <th>Password</th>
         <th>Image</th>
+
     </tr>
     <!-- Loop over the customers and populate the table rows -->
     <tr th:each="customer : ${customers}">
@@ -50,6 +52,7 @@
         <td th:text="${customer.city}"></td>
         <td th:text="${customer.dateOfBirth}"></td>
         <td th:text="${customer.phoneNumber}"></td>
+        <td th:text="${customer.email}"></td>
         <td th:text="${customer.createdOn}"></td>
         <td th:text="${customer.lastModified}"></td>
         <td th:text="${customer.customer1?.age}"></td>

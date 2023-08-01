@@ -28,6 +28,9 @@ public class Customer {
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "customer")
     private Customer2 customer2;
 
+    private String email;
+
+
 
     @Column(name = "image_url")
     private String imageUrl;
@@ -179,6 +182,14 @@ public class Customer {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
 }
