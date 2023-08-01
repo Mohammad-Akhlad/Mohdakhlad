@@ -109,24 +109,57 @@ public class CustomerController {
         }
     }
 
-//    @GetMapping("/get/{id}")
-//    public ModelAndView getCustomerById(@PathVariable Long id) {
-//        ModelAndView mav = new ModelAndView();
-//
-//        // Assuming customerService provides a method to retrieve a customer by ID
-//        Optional<Customer> optionalCustomer = customerService.getCustomerById(id);
-//
-//        if (optionalCustomer.isPresent()) {
-//            Customer customer = optionalCustomer.get();
-//            mav.setViewName("customers"); // Assuming "customer_details" is the template for displaying an individual customer's details.
-//            mav.addObject("customer", customer);
-//        } else {
-//            // Handle the case when the customer is not found with the given ID
-//            mav.setViewName("customer_not_found");
+//    @GetMapping("/get/{customerId}")
+//    public ModelAndView getCustomerById(@PathVariable Long customerId, ModelAndView model, Principal principal) {
+//        if (principal == null) {
+//            // The user is not logged in.
+//            return new ModelAndView("redirect:/login");
 //        }
 //
-//        return mav;
+//        String username = principal.getName();
+//
+//        if (username.equals("admin")) {
+//            Customer customer = customerService.getCustomerById(customerId);
+//            if (customer == null) {
+//                // Handle customer not found
+//                return new ModelAndView("error"); // You can create an "error" view to display an appropriate error message.
+//            }
+//            model.setViewName("customer");
+//            model.addObject("customer", customer);
+//            return model;
+//        } else {
+//            Customer2 customer2 = customerService.getCustomerByUsername(username);
+//            if (customer2 != null && customer2.getCustomer().getId().equals(customerId)) {
+//                Customer customer = customer2.getCustomer();
+//                model.setViewName("customer");
+//                model.addObject("customer", customer);
+//                return model;
+//            } else {
+//                // Handle unauthorized access to customer data
+//                return new ModelAndView("unauthorized"); // You can create an "unauthorized" view to display a message for unauthorized access.
+//            }
+//        }
 //    }
+
+
+    @GetMapping("/get/{id}")
+    public ModelAndView getCustomerById(@PathVariable Long id) {
+        ModelAndView mav = new ModelAndView();
+
+        // Assuming customerService provides a method to retrieve a customer by ID
+        Optional<Customer> optionalCustomer = Optional.ofNullable(customerService.getCustomerById(id));
+
+        if (optionalCustomer.isPresent()) {
+            Customer customer = optionalCustomer.get();
+            mav.setViewName("customers"); // Assuming "customer_details" is the template for displaying an individual customer's details.
+            mav.addObject("customer", customer);
+        } else {
+            // Handle the case when the customer is not found with the given ID
+            mav.setViewName("customer_not_found");
+        }
+
+        return mav;
+    }
 
     @Autowired
     private Customer2Repository customer2Repository;

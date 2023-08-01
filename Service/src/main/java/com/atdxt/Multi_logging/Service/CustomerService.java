@@ -56,6 +56,20 @@ public class CustomerService {
         return customerRepository.existsByPhoneNumber(phoneNumber);
     }
 
+    public Customer getCustomerById(Long customerId) {
+        // Fetch the customer by their ID from the database
+        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+
+        // Check if the customer exists in the database
+        if (customerOptional.isPresent()) {
+            return customerOptional.get();
+        } else {
+            // Handle customer not found
+            return null; // You can return null or throw an exception based on your requirements.
+        }
+    }
+
+
     public Customer2 getUserByUsername(String username) {
         System.out.println("Getting user details for username: " + username);
 
