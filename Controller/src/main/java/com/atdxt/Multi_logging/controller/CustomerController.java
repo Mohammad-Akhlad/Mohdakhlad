@@ -7,6 +7,9 @@ import com.atdxt.Multi_logging.Entity.Customer;
 import com.atdxt.Multi_logging.Entity.Customer2;
 import com.atdxt.Multi_logging.Repository.Customer2Repository;
 import com.atdxt.Multi_logging.Service.CustomerService;
+import com.atdxt.Multi_logging.Service.UserService;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +43,14 @@ public class CustomerController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private final UserService userService;
+
+    @Autowired
+    public CustomerController(UserService userService) {
+        this.userService = userService;
+    }
+
+
     @GetMapping("/")
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView();
@@ -48,6 +59,40 @@ public class CustomerController {
         return mav;
     }
 
+
+        @GetMapping("/login")
+        public ModelAndView customLogin() {
+            ModelAndView modelAndView = new ModelAndView("login");
+/*
+            modelAndView.addObject("customer", new Customer2());
+*/
+            return modelAndView;
+        }
+
+    @PostMapping("/login") // Change @GetMapping to @PostMapping
+    public ModelAndView processLogin(@RequestParam("username") String username,
+                                     @RequestParam("password") String password) {
+        // Handle the login logic here (authenticate the user, redirect to success page, etc.)
+        // For simplicity, let's assume you have a method to handle the login logic and redirect to a success page
+
+        // Example:
+        boolean authenticated = authenticateUser(username, password); // Implement your authentication logic here
+        if (authenticated) {
+            // Redirect to a success page after successful login
+            return new ModelAndView("redirect:/success"); // Change "/success" to the desired landing page URL
+        } else {
+            // If login fails, return back to the login page with an error message
+            ModelAndView modelAndView = new ModelAndView("login");
+            modelAndView.addObject("error", "Invalid credentials. Please try again.");
+            return modelAndView;
+        }
+    }
+
+    private boolean authenticateUser(String username, String password) {
+        return !username.isEmpty() && !password.isEmpty();
+    }
+
+
     @GetMapping("/signup")
     public ModelAndView showSignupForm() {
         ModelAndView modelAndView = new ModelAndView("Signup");
@@ -55,27 +100,147 @@ public class CustomerController {
         return modelAndView;
     }
 
-/*
-    @GetMapping("/login")
-    public ModelAndView login(@RequestParam(name = "logout", required = false) String logout) {
-        ModelAndView modelAndView = new ModelAndView("login");
-        if (logout != null) {
-            modelAndView.addObject("logoutMessage", "You have been logged out successfully.");
-        }
+
+
+
+    @GetMapping("/forgetPassword")
+    public ModelAndView showForgetPasswordForm() {
+        ModelAndView modelAndView = new ModelAndView("email_verification");
         return modelAndView;
     }
-*/
 
 
 
+    @PostMapping("/verifyEmail")
+    public ModelAndView verifyEmail(@RequestParam("email") String email) {
+        // Implement email verification logic here and send the OTP to the user's email
+        Customer customer = userService.findByEmail(email);
+        if (customer == null) {
+            ModelAndView modelAndView = new ModelAndView("email_verification");
+            modelAndView.addObject("error", "Invalid email. Please enter the email you used for sign-up.");
+            return modelAndView;
+        }
+
+        // Generate and send OTP to the user's email
+        String otp = userService.generateOtp();
+        userService.sendOtpEmail(email, otp);
+
+        ModelAndView modelAndView = new ModelAndView("otp_page");
+        modelAndView.addObject("email", email); // Pass the email to the OTP verification page
+        return modelAndView;
+    }
 
 
 
-   @GetMapping("/get")
+    @PostMapping("/verifyOtp")
+    public ModelAndView verifyOTP(@RequestParam("email") String email,
+                                  @RequestParam("otp") String otp,
+                                  HttpSession session) {
+
+        // Retrieve the stored OTP from the user's session
+        String storedOtp = (String) session.getAttribute("otp_" + email);
+
+        System.out.println("Entered OTP: " + otp);
+        System.out.println("Stored OTP: " + storedOtp);
+
+        // Check if the entered OTP matches the stored OTP
+        if (!otp.equals(storedOtp)) {
+            ModelAndView modelAndView = new ModelAndView("otp_page");
+            modelAndView.addObject("email", email);
+            modelAndView.addObject("error", "Invalid OTP. Please try again.");
+            return modelAndView;
+        }
+
+        // If OTP is valid, remove the OTP from the session and redirect to the change_password.html page
+        session.removeAttribute("otp_" + email);
+
+        ModelAndView modelAndView = new ModelAndView("change_password");
+        modelAndView.addObject("email", email);
+        return modelAndView;
+    }
+
+
+    @PostMapping("/changePassword")
+    public ModelAndView changePassword(@RequestParam("email") String email,
+                                       @RequestParam("password") String password,
+                                       @RequestParam("confirmPassword") String confirmPassword) {
+        System.out.println("Change password request");
+
+        // Check if the passwords match
+        if (!password.equals(confirmPassword)) {
+            ModelAndView modelAndView = new ModelAndView("change_password");
+            modelAndView.addObject("email", email);
+            modelAndView.addObject("error", "Passwords do not match. Please try again.");
+            return modelAndView;
+        }
+
+        // Find the user/customer by email
+        Customer customer = userService.findByEmail(email);
+        if (customer == null) {
+            // Handle invalid email (optional)
+            ModelAndView modelAndView = new ModelAndView("change_password");
+            modelAndView.addObject("error", "Invalid email. Please try again.");
+            return modelAndView;
+        }
+
+        try {
+            // Update the user's password
+            userService.updatePassword(email, password);
+        } catch (UserService.UserNotFoundException e) {
+            ModelAndView modelAndView = new ModelAndView("change_password");
+            modelAndView.addObject("email", email);
+            modelAndView.addObject("error", "User not found. Please try again.");
+            return modelAndView;
+        }
+
+        ModelAndView modelAndView = new ModelAndView("login");
+        modelAndView.addObject("success", "Password changed successfully. You can now log in with your new password.");
+        return modelAndView;
+    }
+
+
+
+   /* @PostMapping("/changePassword")
+    public ModelAndView changePassword(@RequestParam("email") String email,
+                                       @RequestParam("password") String password,
+                                       @RequestParam("confirmPassword") String confirmPassword) {
+        System.out.println(" change password ");
+        // Check if the passwords match
+        if (!password.equals(confirmPassword)) {
+            ModelAndView modelAndView = new ModelAndView("change_password");
+            modelAndView.addObject("email", email);
+            modelAndView.addObject("error", "Passwords do not match. Please try again.");
+            return modelAndView;
+        }
+
+        System.out.println(" change password 1 ");
+
+
+        // Find the user/customer by email
+        Customer customer = userService.findByEmail(email);
+        if (customer == null) {
+            // Handle invalid email (optional)
+            ModelAndView modelAndView = new ModelAndView("change_password");
+            modelAndView.addObject("error", "Invalid email. Please try again.");
+            return modelAndView;
+        }
+
+        // Update the user's password
+        customer.setPassword(passwordEncoder.encode(password)); // Use the password encoder to encode the password
+        customerService.saveCustomer(customer);
+
+        ModelAndView modelAndView = new ModelAndView("login");
+        modelAndView.addObject("success", "Password changed successfully. You can now log in with your new password.");
+        return modelAndView;
+    }*/
+
+
+
+    @GetMapping("/get")
     public ModelAndView getAllCustomers(ModelAndView model, Principal principal) {
         if (principal == null) {
             // The user is not logged in.
-            return new ModelAndView("redirect:/login");
+            return new ModelAndView("redirect:/Login");
         }
 
         String username = principal.getName();
@@ -109,37 +274,6 @@ public class CustomerController {
         }
     }
 
-//    @GetMapping("/get/{customerId}")
-//    public ModelAndView getCustomerById(@PathVariable Long customerId, ModelAndView model, Principal principal) {
-//        if (principal == null) {
-//            // The user is not logged in.
-//            return new ModelAndView("redirect:/login");
-//        }
-//
-//        String username = principal.getName();
-//
-//        if (username.equals("admin")) {
-//            Customer customer = customerService.getCustomerById(customerId);
-//            if (customer == null) {
-//                // Handle customer not found
-//                return new ModelAndView("error"); // You can create an "error" view to display an appropriate error message.
-//            }
-//            model.setViewName("customer");
-//            model.addObject("customer", customer);
-//            return model;
-//        } else {
-//            Customer2 customer2 = customerService.getCustomerByUsername(username);
-//            if (customer2 != null && customer2.getCustomer().getId().equals(customerId)) {
-//                Customer customer = customer2.getCustomer();
-//                model.setViewName("customer");
-//                model.addObject("customer", customer);
-//                return model;
-//            } else {
-//                // Handle unauthorized access to customer data
-//                return new ModelAndView("unauthorized"); // You can create an "unauthorized" view to display a message for unauthorized access.
-//            }
-//        }
-//    }
 
 
     @GetMapping("/get/{id}")
@@ -264,26 +398,6 @@ public class CustomerController {
         customerService.saveCustomer(username, password, customer);
         return ResponseEntity.ok("User saved successfully");
     }
-//
-//    @PutMapping("/update/{id}")
-//    public ResponseEntity<String> updateCustomer(@PathVariable("id") Long id, @RequestBody Customer updatedCustomer) {
-//        try {
-//            if (updatedCustomer.getPhoneNumber() != null) {
-//                boolean phoneExists = customerService.isPhoneNumberExists(updatedCustomer.getPhoneNumber());
-//                if (phoneExists) {
-//                    return ResponseEntity.badRequest().body("Invalid user: Phone number already exists");
-//                }
-//                if (!customerService.isValidPhoneNo(updatedCustomer.getPhoneNumber())) {
-//                    return ResponseEntity.badRequest().body("Invalid user: Invalid phone number format");
-//                }
-//            }
-//
-//            Customer customer = customerService.updateCustomer(id, updatedCustomer);
-//            return ResponseEntity.ok("User updated successfully");
-//        } catch (EntityNotFoundException e) {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//        }
-//    }
 
 
     @GetMapping("/get2")

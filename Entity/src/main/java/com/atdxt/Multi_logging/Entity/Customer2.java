@@ -109,6 +109,8 @@ public class Customer2 {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
+   /* private String otp;*/
+
     public Customer2() {
     }
 
@@ -151,6 +153,14 @@ public class Customer2 {
     public void setCustomer(Customer customer) {
         this.customer = customer;
     }
+
+   /* public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
+    }*/
 
     // Method to encrypt the raw password using BCryptPasswordEncoder
     public void encryptPassword(String rawPassword) {

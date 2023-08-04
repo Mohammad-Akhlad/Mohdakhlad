@@ -14,32 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
-@Service
-public class UserService1 implements UserDetailsService {
-
-    private final Customer2Repository customer2Repository;
-
-    @Autowired
-    public UserService1(Customer2Repository customer2Repository) {
-        this.customer2Repository = customer2Repository;
-    }
-
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Customer2 userEncrypt = customer2Repository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
-
-        String password = userEncrypt.getEncryptedPassword();
-        return org.springframework.security.core.userdetails.User.withUsername(username)
-                .password(password)
-                .roles("ADMIN")
-                .build();
-    }
-
-}*/
-
 
 @Service
 public class UserService1 implements UserDetailsService {

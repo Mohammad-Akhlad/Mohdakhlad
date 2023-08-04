@@ -30,6 +30,14 @@ public class Customer {
 
     private String email;
 
+    @Column(name = "email_verified")
+    private boolean emailVerified;
+
+    @Column(name = "otp")
+    private String otp;
+
+    @Column(name = "otp_expiration")
+    private LocalDateTime otpExpiration;
 
 
     @Column(name = "image_url")

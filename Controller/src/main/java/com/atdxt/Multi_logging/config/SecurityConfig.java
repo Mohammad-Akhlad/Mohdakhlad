@@ -1,4 +1,5 @@
 package com.atdxt.Multi_logging.config;
+import com.atdxt.Multi_logging.Service.EmailService;
 import com.atdxt.Multi_logging.Service.UserService1;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -17,11 +18,13 @@ public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
     private final UserService1 userDetailsService;
 
+
     @Autowired
     @Lazy
     public SecurityConfig(UserService1 userDetailsService, PasswordEncoder passwordEncoder) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
+
     }
 
     @Bean
@@ -36,16 +39,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests(authorize ->authorize
+                .authorizeHttpRequests(authorize ->authorize
                         .requestMatchers("/").permitAll()
+                        .requestMatchers( "/login").permitAll()
                         .requestMatchers("/signup").permitAll()
-                      /*  .requestMatchers("/get").hasRole("ADMIN")*/
-
+                        .requestMatchers("/forgetPassword").permitAll()
+                        .requestMatchers("/verifyEmail").permitAll()
+                        .requestMatchers("/verifyOtp").permitAll()
+                        .requestMatchers("/changePassword").permitAll()
                         .anyRequest().authenticated()
 
                 )
                 .formLogin(formLogin -> formLogin
-                        .defaultSuccessUrl("/get") // Specify the URL to redirect after successful login
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/get")
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -57,10 +64,26 @@ public class SecurityConfig {
         return  http.build();
     }
 
+
     @Bean
-    public PasswordEncoder passwordEncoder() {
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    public EmailService emailService() {
+        return new EmailService() {
+            @Override
+            public void sendOtpEmail(String email, String otp) {
+                // Replace this with your actual email sending logic
+                // For example, using JavaMail or any email sending service
+                // Example: Send an email with the OTP to the user's email address
+                System.out.println("Sending OTP to email: " + email);
+                System.out.println("OTP: " + otp);
+                // Implement the logic to send an email with the OTP here
+            }
+        };
+    }
+
 }
 
 

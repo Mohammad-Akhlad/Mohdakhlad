@@ -1,6 +1,5 @@
 package com.atdxt.Multi_logging.Service;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.atdxt.Multi_logging.Entity.Customer;
 import com.atdxt.Multi_logging.Entity.Customer1;
 import com.atdxt.Multi_logging.Entity.Customer2;
@@ -12,21 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class CustomerService {
-
-//    private final AmazonS3 amazonS3;
-//
-//    @Autowired
-//    public CustomerService(AmazonS3 amazonS3) {
-//        this.amazonS3 = amazonS3;
-//    }
-
 
     @Autowired
     private CustomerRepository customerRepository;
@@ -40,10 +30,9 @@ public class CustomerService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-        public List<Customer> getCustomers() {
+    public List<Customer> getCustomers() {
         return customerRepository.findAll();
     }
-
 
     private static final String PHONE_NUMBER_REGEX = "\\d{10}"; // Assuming a valid phone number consists of 10 digits
 
@@ -55,7 +44,6 @@ public class CustomerService {
     public boolean isEmailExists(String email) {
         return customerRepository.existsByEmail(email);
     }
-
 
     public boolean isPhoneNumberExists(String phoneNumber) {
         return customerRepository.existsByPhoneNumber(phoneNumber);
@@ -74,7 +62,6 @@ public class CustomerService {
         }
     }
 
-
     public Customer2 getUserByUsername(String username) {
         System.out.println("Getting user details for username: " + username);
 
@@ -90,8 +77,9 @@ public class CustomerService {
         }
     }
 
-//    @Transactional
-    public Customer saveCustomer(String username, String password, Customer customer) {
+
+
+    /*public Customer saveCustomer(String username, String password, Customer customer) {
         LocalDateTime currentDateTime = LocalDateTime.now();
         customer.setCreatedOn(currentDateTime);
         customer.setLastModified(currentDateTime);
@@ -99,27 +87,46 @@ public class CustomerService {
         // Create and set the Customer2 object for provided login
         Customer2 customer2 = new Customer2();
         customer2.setUsername(username); // Set the provided username
-        customer2.setEncryptedPassword(password); // Encode the provided password
-//        customer2.encryptPassword();
-        customer2.setCreatedOn(currentDateTime);
-        customer2.setLastModified(currentDateTime);
-        customer2.setCustomer(customer);
-        customer.setCustomer2(customer2); // Associate Customer2 with Customer
 
-        // You can also handle the individual login example here if needed
+        // Encode the provided password using BCryptPasswordEncoder
+        String encryptedPassword = passwordEncoder.encode(password);
+        customer2.setEncryptedPassword(encryptedPassword);
 
-        // Code for Customer1 association (if applicable) remains unchanged
-        Customer1 customer1 = customer.getCustomer1();
-        if (customer1 != null) {
-            customer1.setCreatedOn(currentDateTime);
-            customer1.setLastModified(currentDateTime);
-            customer1.setAge(customer.getCustomer1().getAge());
-            customer1.setCustomer(customer);
-        }
+        // Rest of the method remains the same...
 
         return customerRepository.save(customer);
-    }
+    }*/
 
+    public Customer saveCustomer(String username, String password, Customer customer) {
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        customer.setCreatedOn(currentDateTime);
+        customer.setLastModified(currentDateTime);
+
+
+        System.out.println("Provided username: " + username);
+        System.out.println("Provided password: " + password);
+
+
+        // Get the existing Customer2 object associated with the customer
+        Customer2 customer2 = customer.getCustomer2();
+
+        // If no Customer2 object is associated, create a new one and associate it with the customer
+        if (customer2 == null) {
+            customer2 = new Customer2();
+            customer2.setCustomer(customer);
+            customer.setCustomer2(customer2);
+        }
+
+        // Set the provided username and encrypt the password
+        customer2.setUsername(username);
+        String encryptedPassword = passwordEncoder.encode(password);
+        customer2.setEncryptedPassword(encryptedPassword);
+
+        // Update Customer1 if needed (you can add your logic here)
+
+        // Save the changes to the database
+        return customerRepository.save(customer);
+    }
 
 
     public Customer2 getCustomerByUsername(String username) {
@@ -135,4 +142,6 @@ public class CustomerService {
 
 
 
+    public void saveCustomer(Customer customer) {
+    }
 }
