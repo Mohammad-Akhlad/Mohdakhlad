@@ -81,7 +81,7 @@ The logging includes:
 ## EC2 Instance Link
 This application is present in the EC2 instance to access run below link
 
-     http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/customers/get
+     http://ec2-13-48-27-139.eu-north-1.compute.amazonaws.com:8080/customers/get
 
 # Configuration
 
@@ -98,9 +98,9 @@ Database Name: jdbc_video
 
 EC2 name : AWS-Instances
 
-EC2 address: ec2-13-235-81-85.ap-south-1.compute.amazonaws.com
+EC2 address: ec2-13-48-27-139.eu-north-1.compute.amazonaws.com
 
-Public IPV4 address: 13.235.81.85
+Public IPV4 address: 13.48.27.139
 
 
 
@@ -110,17 +110,17 @@ Public IPV4 address: 13.235.81.85
 
 ## Application setting about RDS instances
 
-Instance Identifier: Akhlad-RDS
+Instance Identifier: akhlad-rds
 
-Username: Akhlad123
+Username: mohdakhlad
 
 Password: Akhlad123
 
 Database Name: Akhlad123
 
-RDS Endpoint : akhlad-rds.cvc0llveztzp.ap-south-1.rds.amazonaws.com
+RDS Endpoint : akhlad-rds.cozepxcgspyj.eu-north-1.rds.amazonaws.com
 
-Port No. 3306
+Port No. 5432
 
 
 ## Two Entity Tables
@@ -262,25 +262,36 @@ curl -X GET http://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:8080/custom
 
 ## S3 bucket with dev 
 
-aws.accessKey=AKIAQLSL4MY3G2MSCQXB
+aws.accessKey=AKIA5QGYJYUO5GOSCPUK
 
-aws.secretKey=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
+aws.secretKey=1ruVGITTJgXqFZoNfZ/4XSYCTBSOu0EtQLfdlDxe
 
-aws.region= ap-south-1
+aws.region= eu-north-1
 
-aws.s3.bucketName=my-dev-bucket1
+aws.s3.bucketName=dev-psql-s3
 
 
 ## S3 bucket with prod
 
-aws.accessKey=AKIAQLSL4MY3G2MSCQXB
+aws.accessKey=AKIA5QGYJYUO5GOSCPUK
 
-aws.secretKey=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
+aws.secretKey=1ruVGITTJgXqFZoNfZ/4XSYCTBSOu0EtQLfdlDxe
 
-aws.region= ap-south-1
+aws.region= eu-north-1
 
-aws.s3.bucketName=my-prod-bucket1
+aws.s3.bucketName=prod-psql-s3
 
+
+
+## To connect with my rds Postgress
+
+psql -h akhlad-rds.cozepxcgspyj.eu-north-1.rds.amazonaws.com -p 5432 -U mohdakhlad -d Akhlad123
+
+
+
+## To connect with my ec2 instance terminal
+
+ssh -i .private ubuntu@ec2-13-48-27-139.eu-north-1.compute.amazonaws.com
 
 
 

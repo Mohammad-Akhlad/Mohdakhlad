@@ -27,7 +27,7 @@ if [ "$1" == "dev" ]; then
     export SPRING_DATASOURCE_USERNAME=mohdakhlad
     export SPRING_DATASOURCE_PASSWORD=Akhlad123
 elif [ "$1" == "prod" ]; then
-    export SPRING_DATASOURCE_URL=jdbc:postgresql://ec2-13-235-81-85.ap-south-1.compute.amazonaws.com:5432/Akhlad123
+    export SPRING_DATASOURCE_URL=jdbc:postgresql://akhlad-rds.cozepxcgspyj.eu-north-1.rds.amazonaws.com:5432/Akhlad123
     export SPRING_DATASOURCE_USERNAME=mohdakhlad
     export SPRING_DATASOURCE_PASSWORD=Akhlad123
 fi

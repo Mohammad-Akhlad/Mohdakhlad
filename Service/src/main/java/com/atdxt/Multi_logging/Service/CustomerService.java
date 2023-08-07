@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,23 +81,7 @@ public class CustomerService {
 
 
 
-    /*public Customer saveCustomer(String username, String password, Customer customer) {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        customer.setCreatedOn(currentDateTime);
-        customer.setLastModified(currentDateTime);
 
-        // Create and set the Customer2 object for provided login
-        Customer2 customer2 = new Customer2();
-        customer2.setUsername(username); // Set the provided username
-
-        // Encode the provided password using BCryptPasswordEncoder
-        String encryptedPassword = passwordEncoder.encode(password);
-        customer2.setEncryptedPassword(encryptedPassword);
-
-        // Rest of the method remains the same...
-
-        return customerRepository.save(customer);
-    }*/
 
     public Customer saveCustomer(String username, String password, Customer customer) {
         LocalDateTime currentDateTime = LocalDateTime.now();
@@ -103,8 +89,7 @@ public class CustomerService {
         customer.setLastModified(currentDateTime);
 
 
-        System.out.println("Provided username: " + username);
-        System.out.println("Provided password: " + password);
+
 
 
         // Get the existing Customer2 object associated with the customer
@@ -122,11 +107,57 @@ public class CustomerService {
         String encryptedPassword = passwordEncoder.encode(password);
         customer2.setEncryptedPassword(encryptedPassword);
 
+
+
+        Customer1 customer1 = customer.getCustomer1();
+        if (customer1 != null) {
+            customer1.setCreatedOn(currentDateTime);
+            customer1.setLastModified(currentDateTime);
+            customer1.setAge(customer.getCustomer1().getAge());
+            customer1.setCustomer(customer);
+        }
+
         // Update Customer1 if needed (you can add your logic here)
 
         // Save the changes to the database
         return customerRepository.save(customer);
     }
+
+   /* public Customer saveCustomer(String username, String password, Customer customer) {
+        // Other code...
+
+        // Calculate the age based on the date of birth
+        int age = calculateAge(customer.getDateOfBirth());
+
+        // Get the existing Customer2 object associated with the customer
+        Customer2 customer2 = customer.getCustomer2();
+
+        // If no Customer2 object is associated, create a new one and associate it with the customer
+        if (customer2 == null) {
+            customer2 = new Customer2();
+            customer2.setCustomer(customer);
+            customer.setCustomer2(customer2);
+        }
+
+        // Set the provided username and encrypt the password
+        customer2.setUsername(username);
+        String encryptedPassword = passwordEncoder.encode(password);
+        customer2.setEncryptedPassword(encryptedPassword);
+
+        // Set the age in the Customer1 object
+        customer.getCustomer1().setAge(age);
+
+        // Save the changes to the database
+        return customerRepository.save(customer);
+    }
+
+    private int calculateAge(LocalDate dateOfBirth) {
+        LocalDate currentDate = LocalDate.now();
+        Period period = Period.between(dateOfBirth, currentDate);
+        return period.getYears();
+    }
+*/
+
 
 
     public Customer2 getCustomerByUsername(String username) {

@@ -69,7 +69,7 @@ public class CustomerController {
             return modelAndView;
         }
 
-    @PostMapping("/login") // Change @GetMapping to @PostMapping
+  /*  @PostMapping("/login") // Change @GetMapping to @PostMapping
     public ModelAndView processLogin(@RequestParam("username") String username,
                                      @RequestParam("password") String password) {
         // Handle the login logic here (authenticate the user, redirect to success page, etc.)
@@ -90,7 +90,25 @@ public class CustomerController {
 
     private boolean authenticateUser(String username, String password) {
         return !username.isEmpty() && !password.isEmpty();
+    }*/
+
+    @PostMapping("/login") // Change @GetMapping to @PostMapping
+    public ModelAndView processLogin(@RequestParam("username") String username,
+                                     @RequestParam("password") String password) {
+        // Fetch the Customer2 object for authentication
+        Customer2 customer2 = customerService.getUserByUsername(username);
+
+        if (customer2 != null && passwordEncoder.matches(password, customer2.getEncryptedPassword())) {
+            // Authentication successful, redirect to a success page
+            return new ModelAndView("redirect:/success"); // Change "/success" to the desired landing page URL
+        } else {
+            // If login fails, return back to the login page with an error message
+            ModelAndView modelAndView = new ModelAndView("login");
+            modelAndView.addObject("error", "Invalid credentials. Please try again.");
+            return modelAndView;
+        }
     }
+
 
 
     @GetMapping("/signup")
@@ -200,39 +218,6 @@ public class CustomerController {
 
 
 
-   /* @PostMapping("/changePassword")
-    public ModelAndView changePassword(@RequestParam("email") String email,
-                                       @RequestParam("password") String password,
-                                       @RequestParam("confirmPassword") String confirmPassword) {
-        System.out.println(" change password ");
-        // Check if the passwords match
-        if (!password.equals(confirmPassword)) {
-            ModelAndView modelAndView = new ModelAndView("change_password");
-            modelAndView.addObject("email", email);
-            modelAndView.addObject("error", "Passwords do not match. Please try again.");
-            return modelAndView;
-        }
-
-        System.out.println(" change password 1 ");
-
-
-        // Find the user/customer by email
-        Customer customer = userService.findByEmail(email);
-        if (customer == null) {
-            // Handle invalid email (optional)
-            ModelAndView modelAndView = new ModelAndView("change_password");
-            modelAndView.addObject("error", "Invalid email. Please try again.");
-            return modelAndView;
-        }
-
-        // Update the user's password
-        customer.setPassword(passwordEncoder.encode(password)); // Use the password encoder to encode the password
-        customerService.saveCustomer(customer);
-
-        ModelAndView modelAndView = new ModelAndView("login");
-        modelAndView.addObject("success", "Password changed successfully. You can now log in with your new password.");
-        return modelAndView;
-    }*/
 
 
 
@@ -337,7 +322,7 @@ public class CustomerController {
         customer.setCustomer2(customer2);
 
         // Save the customer to the table using the customerService
-        /*customerService.saveCustomer(username, encodedPassword, customer);*/
+       /* customerService.saveCustomer(username, encodedPassword, customer);*/
 
         try {
             // Upload the image to S3 bucket if an image file is provided
