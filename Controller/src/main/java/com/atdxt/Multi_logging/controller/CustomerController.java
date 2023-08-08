@@ -69,28 +69,7 @@ public class CustomerController {
             return modelAndView;
         }
 
-  /*  @PostMapping("/login") // Change @GetMapping to @PostMapping
-    public ModelAndView processLogin(@RequestParam("username") String username,
-                                     @RequestParam("password") String password) {
-        // Handle the login logic here (authenticate the user, redirect to success page, etc.)
-        // For simplicity, let's assume you have a method to handle the login logic and redirect to a success page
 
-        // Example:
-        boolean authenticated = authenticateUser(username, password); // Implement your authentication logic here
-        if (authenticated) {
-            // Redirect to a success page after successful login
-            return new ModelAndView("redirect:/success"); // Change "/success" to the desired landing page URL
-        } else {
-            // If login fails, return back to the login page with an error message
-            ModelAndView modelAndView = new ModelAndView("login");
-            modelAndView.addObject("error", "Invalid credentials. Please try again.");
-            return modelAndView;
-        }
-    }
-
-    private boolean authenticateUser(String username, String password) {
-        return !username.isEmpty() && !password.isEmpty();
-    }*/
 
     @PostMapping("/login") // Change @GetMapping to @PostMapping
     public ModelAndView processLogin(@RequestParam("username") String username,
