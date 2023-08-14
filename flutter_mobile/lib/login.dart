@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -11,14 +12,21 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _login() {
-    // Implement your login logic here
+  void _login() async {
     String username = _usernameController.text;
     String password = _passwordController.text;
 
-    // Example: Authenticate user and navigate to home screen
-    if (username == 'user' && password == 'password') {
-      // Navigate to home screen
+    // Prepare the login request
+    var response = await http.post(
+      Uri.parse('http://ec2-13-48-27-139.eu-north-1.compute.amazonaws.com:8080/login'), // Replace with your backend login URL
+      body: {
+        'username': username,
+        'password': password,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // Successful login, navigate to home screen or desired page
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       // Display error message
@@ -53,6 +61,8 @@ class _LoginPageState extends State<LoginPage> {
               controller: _usernameController,
               decoration: InputDecoration(
                 labelText: 'Username',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.person),
               ),
             ),
             SizedBox(height: 12),
@@ -61,11 +71,18 @@ class _LoginPageState extends State<LoginPage> {
               obscureText: true,
               decoration: InputDecoration(
                 labelText: 'Password',
+                border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.lock),
               ),
             ),
             SizedBox(height: 24),
             ElevatedButton(
               onPressed: _login,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.blue,
+                padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                textStyle: TextStyle(fontSize: 18),
+              ),
               child: const Text('Login'),
             ),
           ],

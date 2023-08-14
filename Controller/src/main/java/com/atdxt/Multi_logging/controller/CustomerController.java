@@ -79,7 +79,7 @@ public class CustomerController {
 
         if (customer2 != null && passwordEncoder.matches(password, customer2.getEncryptedPassword())) {
             // Authentication successful, redirect to a success page
-            return new ModelAndView("redirect:/success"); // Change "/success" to the desired landing page URL
+            return new ModelAndView("redirect:http://localhost:8081/success"); // Change "/success" to the desired landing page URL
         } else {
             // If login fails, return back to the login page with an error message
             ModelAndView modelAndView = new ModelAndView("login");
@@ -270,6 +270,7 @@ public class CustomerController {
     @Value("${aws.s3.bucketName}")
     private String bucketName;
 
+    @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping("/signup")
     public ModelAndView signup(@ModelAttribute("customer") Customer customer,
                                @RequestParam("username") String username,
